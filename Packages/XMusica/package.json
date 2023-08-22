@@ -1,0 +1,21 @@
+{
+  "name": "com.xreal.xmusica",
+  "version": "0.1.0",
+  "displayName": "XMusica",
+  "description": "A C# port of a sfz-like note sampler. Initially made for the project Band Together.",
+  "unity": "2021.3",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.6"
+  },
+  "keywords": [
+    "midi",
+    "music",
+    "xreal"
+  ],
+  "author": {
+    "name": "Sunny Kim",
+    "email": "sunnykimunity@gmail.com",
+    "url": "https://github.com/sk7725"
+  },
+  "unityRelease": "2f1"
+}
