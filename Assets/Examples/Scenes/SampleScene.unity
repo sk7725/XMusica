@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   note: 119
-  note2: 69
+  note2: 57
   controlNote: 119
 --- !u!4 &109328867
 Transform:

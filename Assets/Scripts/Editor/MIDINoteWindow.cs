@@ -11,19 +11,17 @@ namespace XMusica.Editor {
 
         private static float offset = 5, border = 3;
         private static float lineHeight = EditorGUIUtility.singleLineHeight, octavebuttonWidth = 30, currentOctaveHeight = 30;
-        private static float keyWidth = 25, keyHeight = 120, blackKeyWidth = 12, blackKeyHeight = 70;
+        private static float keyWidth = 25, keyHeight = 120, blackKeyWidth = 18, blackKeyHeight = 70;
 
         private static Color whiteKeyColor = new Color(0.8f, 0.8f, 0.8f), blackKeyColor = new Color(0.2f, 0.2f, 0.2f);
         private static Color whiteKeySelectedColor = Color.cyan, blackKeySelectedColor = new Color(0f, 0.6f, 0.6f);
         private static Color whiteKeyOutrangeColor = Color.gray, blackKeyOutrangeColor = new Color(0.15f, 0.15f, 0.15f);
-        private static Color whiteKeyDisabledColor = new Color(0.4f, 0f, 0f), blackKeyDisabledColor = new Color(0.2f, 0f, 0f);
+        private static Color whiteKeyDisabledColor = new Color(0.3f, 0.3f, 0.3f), blackKeyDisabledColor = new Color(0.25f, 0.25f, 0.25f);
 
         private static GUIContent octaveLabel = new GUIContent("Octave", "Octave of the note. (0~9)");
         private static GUIContent noteLabel = new GUIContent("Note", "Named note value. Use the piano below to select the note.");
 
         private static GUIStyle whiteKeyStyle, blackKeyStyle;
-
-        private static bool[] whiteKeyPressed, blackKeyPressed;
 
         private SerializedObject target;
         private SerializedProperty property;
@@ -46,16 +44,30 @@ namespace XMusica.Editor {
         private void InitializeStyles() {
             if(whiteKeyStyle == null) {
                 whiteKeyStyle = new GUIStyle("button");
-                whiteKeyStyle.normal.textColor = Color.blue;
+                whiteKeyStyle.normal.textColor = Color.black;
                 whiteKeyStyle.normal.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
+                whiteKeyStyle.active.textColor = Color.black;
+                whiteKeyStyle.active.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
+                whiteKeyStyle.hover.textColor = Color.black;
+                whiteKeyStyle.hover.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
+                whiteKeyStyle.focused.textColor = Color.black;
+                whiteKeyStyle.focused.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
                 Debug.Log("Got: " + whiteKeyStyle.normal.background + " !");
                 whiteKeyStyle.alignment = TextAnchor.LowerCenter;
+                whiteKeyStyle.clipping = TextClipping.Overflow;
+            }
+            if (blackKeyStyle == null) {
+                blackKeyStyle = new GUIStyle("button");
+                blackKeyStyle.normal.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
+                blackKeyStyle.active.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
+                blackKeyStyle.hover.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
+                blackKeyStyle.focused.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
             }
         }
 
         private void OnGUI() {
             try {
-                target.Update();//todo fix
+                target.Update();//todo fix - update window when selected object changes and act accordingly
             }
             catch {
                 Close();
@@ -101,9 +113,6 @@ namespace XMusica.Editor {
 
         private void OnPianoGUI(Rect total, int currentNote, out int newNote) {
             InitializeStyles();
-            if (whiteKeyPressed == null) {
-                whiteKeyPressed = new bool[EDGE_KEYS * 2 + 7];
-            }
 
             newNote = currentNote;
             Color defColor = GUI.backgroundColor;
@@ -114,16 +123,42 @@ namespace XMusica.Editor {
             bool leftPressed = GUI.Button(LeftRect(total, octavebuttonWidth), "<");
             bool rightPressed = GUI.Button(RightRect(total, octavebuttonWidth), ">");
 
+            int keyPressed = -1;
+
+            //white keys
             float x = total.x + octavebuttonWidth + offset;
             for(int i = 0; i < EDGE_KEYS * 2 + 7; i++) {
                 int now = GetNoteOfWhiteKey(i);
-                GUI.backgroundColor = now == currentNote ? whiteKeySelectedColor : ((now < 21 || now > 127) ? whiteKeyDisabledColor : (i < EDGE_KEYS || i >= EDGE_KEYS + 7) ? whiteKeyOutrangeColor : Color.white);
-                whiteKeyPressed[i] = GUI.Button(new Rect(x, total.y, keyWidth, total.height), GetNoteString(now), whiteKeyStyle);
+                GUI.backgroundColor = now == currentNote ? whiteKeySelectedColor : ((now < 21 || now > 127) ? whiteKeyDisabledColor : (i < EDGE_KEYS || i >= EDGE_KEYS + 7) ? whiteKeyOutrangeColor : whiteKeyColor);
+                bool b1 = GUI.Button(new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight), GetNoteString(now), whiteKeyStyle);
+                int j = (i + 7 - EDGE_KEYS) % 7;
+                bool hasLeftBit = j == 3 || j == 0 || i == 0; bool hasRightBit = j == 2 || j == 6 || i == EDGE_KEYS * 2 + 6;
+                bool b2 = GUI.Button(new Rect(hasLeftBit ? x : x + blackKeyWidth * 0.5f, total.y, keyWidth - blackKeyWidth * ((hasLeftBit ? 0 : 0.5f) + (hasRightBit ? 0 : 0.5f)), blackKeyHeight), "", whiteKeyStyle);
+                if ((b1 || b2) && (now >= 21 && now <= 127)) keyPressed = now;
                 x += keyWidth;
             }
 
+            //black keys
+            Debug.Log("start");
+            x = total.x + octavebuttonWidth + offset + keyWidth * 0.5f + (keyWidth - blackKeyWidth) * 0.5f;
+            for (int i = 0; i < EDGE_KEYS * 2 + 7 - 1; i++) {
+                int j = (i + 7 - EDGE_KEYS) % 7;
+                Debug.Log(j);
+                if (j == 2 || j == 6) {
+                    x += keyWidth;
+                    continue;
+                }
+                int now = GetNoteOfBlackKey(i);
+                GUI.backgroundColor = now == currentNote ? blackKeySelectedColor : ((now < 21 || now > 127) ? blackKeyDisabledColor : (i < EDGE_KEYS || i >= EDGE_KEYS + 7) ? blackKeyOutrangeColor : blackKeyColor);
+                bool b = GUI.Button(new Rect(x, total.y, blackKeyWidth, blackKeyHeight), "", blackKeyStyle);
+                if(b && (now >= 21 && now <= 127)) keyPressed = now;
+                x += keyWidth;
+            }
+
+            if (keyPressed != -1) newNote = keyPressed;
+
             if (leftPressed) viewOctave -= 1;
-            if(rightPressed) viewOctave += 1;
+            if (rightPressed) viewOctave += 1;
             viewOctave = Mathf.Clamp(viewOctave, 0, 9);
             GUI.backgroundColor = defColor;
         }
@@ -145,9 +180,14 @@ namespace XMusica.Editor {
             return sb.ToString();
         }
 
+        private static int[] whiteToNote = {-8, -7, -5, -3, -1, 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19};
+
         private int GetNoteOfWhiteKey(int index) {
-            //todo
-            return 21;
+            return whiteToNote[index] + 12 * (viewOctave + 1);
+        }
+
+        private int GetNoteOfBlackKey(int index) {
+            return whiteToNote[index] + 12 * (viewOctave + 1) + 1;
         }
 
         private Rect LeftRect(Rect rect, float a) {
