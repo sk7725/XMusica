@@ -45,14 +45,14 @@ namespace XMusica.Editor {
             if(whiteKeyStyle == null) {
                 whiteKeyStyle = new GUIStyle("button");
                 whiteKeyStyle.normal.textColor = Color.black;
-                whiteKeyStyle.normal.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
+                whiteKeyStyle.normal.background = (Texture2D)EditorGUIUtility.Load("key.white.png"); //todo make this work with packages
                 whiteKeyStyle.active.textColor = Color.black;
                 whiteKeyStyle.active.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
                 whiteKeyStyle.hover.textColor = Color.black;
                 whiteKeyStyle.hover.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
                 whiteKeyStyle.focused.textColor = Color.black;
                 whiteKeyStyle.focused.background = (Texture2D)EditorGUIUtility.Load("key.white.png");
-                Debug.Log("Got: " + whiteKeyStyle.normal.background + " !");
+                //Debug.Log("Got: " + whiteKeyStyle.normal.background + " !");
                 whiteKeyStyle.alignment = TextAnchor.LowerCenter;
                 whiteKeyStyle.clipping = TextClipping.Overflow;
             }
