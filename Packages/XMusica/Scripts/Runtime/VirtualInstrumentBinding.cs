@@ -14,6 +14,7 @@ namespace XMusica {
         /// </summary>
         [SerializeField] private int[] boundVelocity = new int[127];
         [SerializeField] private SampleData[][] samples = { };
+        [SerializeField] public VInstGenerationData generationData = VInstGenerationData.Default;
 
 
         [System.Serializable]

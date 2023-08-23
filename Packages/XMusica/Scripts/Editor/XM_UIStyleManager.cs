@@ -7,6 +7,7 @@ namespace XMusica.Editor {
     public static class XM_UIStyleManager {
         public static GUIStyle whitePianoKey;
         public static GUIStyle blackPianoKey;
+        public static GUIStyle dropdown, selectedDropdown;
 
         public static Texture2D vinstBinderWindowIcon;
         public static Texture2D whiteKeyTexture;
@@ -34,6 +35,13 @@ namespace XMusica.Editor {
             blackPianoKey.active.background = whiteKeyTexture;
             blackPianoKey.hover.background = whiteKeyTexture;
             blackPianoKey.focused.background = whiteKeyTexture;
+
+            dropdown = new GUIStyle(EditorStyles.miniButton);
+            dropdown.alignment = TextAnchor.MiddleLeft;
+            selectedDropdown = new GUIStyle(EditorStyles.miniButton);
+            selectedDropdown.alignment = TextAnchor.MiddleLeft;
+            selectedDropdown.normal.textColor = selectedDropdown.hover.textColor = selectedDropdown.focused.textColor = selectedDropdown.active.textColor = Color.yellow;
+            selectedDropdown.fontStyle = FontStyle.BoldAndItalic;
         }
     }
 }

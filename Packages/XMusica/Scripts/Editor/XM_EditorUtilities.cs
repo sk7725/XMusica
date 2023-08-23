@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace XMusica.Editor {
@@ -34,6 +36,36 @@ namespace XMusica.Editor {
         private static string m_PackageFullPath;
         // Static Fields Related to locating the TextMesh Pro Asset
         private static string folderPath = "Not Found";
+
+        public static string GetActivePathOrFallback(bool forceAssets = false) {
+            string path = "Assets";
+
+            if (TryGetActiveFolderPath(out string p)) path = p;
+
+            if (forceAssets && !path.StartsWith("Assets")) path = "Assets";
+            return path;
+        }
+
+        private static bool TryGetActiveFolderPath(out string path) {
+            var _tryGetActiveFolderPath = typeof(ProjectWindowUtil).GetMethod("TryGetActiveFolderPath", BindingFlags.Static | BindingFlags.NonPublic);
+
+            object[] args = new object[] { null };
+            bool found = (bool)_tryGetActiveFolderPath.Invoke(null, args);
+            path = (string)args[0];
+
+            return found;
+        }
+
+        /// <summary>
+        /// Gets unique colors required for some diagram.
+        /// </summary>
+        /// <param name="size">The number of total different colors required for the diagram</param>
+        /// <param name="index">The current color index [0, size)</param>
+        /// <returns></returns>
+        public static Color GetDiagramColor(int size, int index, float saturation = 1, float brightness = 1) {
+            if (size <= 10) return Color.HSVToRGB(index * 0.1f, saturation, brightness);
+            return Color.HSVToRGB(index / (float)size, saturation, brightness);
+        }
 
         private static string GetPackageRelativePath() {
             // Check for potential UPM package

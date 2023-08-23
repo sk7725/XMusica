@@ -7,14 +7,13 @@ using UnityEngine;
 namespace XMusica.Editor {
     public class MIDINoteWindow : EditorWindow {
         private const int EDGE_KEYS = 5;
-        private const string NOTE_STR = "CCDDEFFGGAAB";
 
         private static float offset = 5, border = 3;
         private static float lineHeight = EditorGUIUtility.singleLineHeight, octavebuttonWidth = 30, currentOctaveHeight = 30;
         private static float keyWidth = 25, keyHeight = 120, blackKeyWidth = 18, blackKeyHeight = 70;
 
         private static Color whiteKeyColor = new Color(0.8f, 0.8f, 0.8f), blackKeyColor = new Color(0.2f, 0.2f, 0.2f);
-        private static Color whiteKeySelectedColor = Color.cyan, blackKeySelectedColor = new Color(0f, 0.6f, 0.6f);
+        private static Color whiteKeySelectedColor = Color.cyan, blackKeySelectedColor = new Color(0f, 0.8f, 0.8f);
         private static Color whiteKeyOutrangeColor = Color.gray, blackKeyOutrangeColor = new Color(0.15f, 0.15f, 0.15f);
         private static Color whiteKeyDisabledColor = new Color(0.3f, 0.3f, 0.3f), blackKeyDisabledColor = new Color(0.25f, 0.25f, 0.25f);
 
@@ -30,7 +29,7 @@ namespace XMusica.Editor {
 
             window.target = property.serializedObject;
             window.property = property;
-            window.viewOctave = GetOctave(property.intValue);
+            window.viewOctave = XM_Utilities.GetOctave(property.intValue);
 
             window.titleContent = new GUIContent($"Editing Note: {property.name}");
             window.minSize = new Vector2(keyWidth * (7 + 2 * EDGE_KEYS) + offset * 2 + octavebuttonWidth * 2 + border * 2, lineHeight * 2 + offset * 2 + keyHeight + currentOctaveHeight);
@@ -48,10 +47,10 @@ namespace XMusica.Editor {
 
             GUI.skin.box.alignment = TextAnchor.MiddleCenter;
             int prevNote = property.intValue;
-            int octave = EditorGUILayout.IntSlider(octaveLabel, GetOctave(property.intValue), 0, 9);
+            int octave = EditorGUILayout.IntSlider(octaveLabel, XM_Utilities.GetOctave(property.intValue), 0, 9);
             int noteValue = property.intValue % 12;
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField(noteLabel, GetNoteString(property.intValue));
+            EditorGUILayout.TextField(noteLabel, XM_Utilities.GetNoteString(property.intValue));
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space(offset);
@@ -78,7 +77,7 @@ namespace XMusica.Editor {
             changedNote = Mathf.Clamp(changedNote, 21, 127);
             if(changedNote != prevNote) {
                 property.intValue = changedNote;
-                viewOctave = GetOctave(changedNote);
+                viewOctave = XM_Utilities.GetOctave(changedNote);
                 target.ApplyModifiedProperties();
             }
         }
@@ -90,8 +89,13 @@ namespace XMusica.Editor {
             GUI.Box(total, "");
             GUI.backgroundColor = defColor;
 
+            EditorGUI.BeginDisabledGroup(viewOctave <= 0);
             bool leftPressed = GUI.Button(LeftRect(total, octavebuttonWidth), "<");
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUI.BeginDisabledGroup(viewOctave >= 9);
             bool rightPressed = GUI.Button(RightRect(total, octavebuttonWidth), ">");
+            EditorGUI.EndDisabledGroup();
 
             int keyPressed = -1;
 
@@ -100,7 +104,7 @@ namespace XMusica.Editor {
             for(int i = 0; i < EDGE_KEYS * 2 + 7; i++) {
                 int now = GetNoteOfWhiteKey(i);
                 GUI.backgroundColor = now == currentNote ? whiteKeySelectedColor : ((now < 21 || now > 127) ? whiteKeyDisabledColor : (i < EDGE_KEYS || i >= EDGE_KEYS + 7) ? whiteKeyOutrangeColor : whiteKeyColor);
-                bool b1 = GUI.Button(new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight - border), GetNoteString(now), XM_UIStyleManager.whitePianoKey);
+                bool b1 = GUI.Button(new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight - border), XM_Utilities.GetNoteString(now), XM_UIStyleManager.whitePianoKey);
                 int j = (i + 7 - EDGE_KEYS) % 7;
                 bool hasLeftBit = j == 3 || j == 0 || i == 0; bool hasRightBit = j == 2 || j == 6 || i == EDGE_KEYS * 2 + 6;
                 bool b2 = GUI.Button(new Rect(hasLeftBit ? x : x + blackKeyWidth * 0.5f, total.y, keyWidth - blackKeyWidth * ((hasLeftBit ? 0 : 0.5f) + (hasRightBit ? 0 : 0.5f)), blackKeyHeight), "", XM_UIStyleManager.whitePianoKey);
@@ -109,11 +113,9 @@ namespace XMusica.Editor {
             }
 
             //black keys
-            Debug.Log("start");
             x = total.x + octavebuttonWidth + offset + keyWidth * 0.5f + (keyWidth - blackKeyWidth) * 0.5f;
             for (int i = 0; i < EDGE_KEYS * 2 + 7 - 1; i++) {
                 int j = (i + 7 - EDGE_KEYS) % 7;
-                Debug.Log(j);
                 if (j == 2 || j == 6) {
                     x += keyWidth;
                     continue;
@@ -131,23 +133,6 @@ namespace XMusica.Editor {
             if (rightPressed) viewOctave += 1;
             viewOctave = Mathf.Clamp(viewOctave, 0, 9);
             GUI.backgroundColor = defColor;
-        }
-
-        private static int GetOctave(int note) {
-            return note / 12 - 1;
-        }
-
-        private static string GetNoteString(int note) {
-            if (note < 21 || note > 127) return note.ToString();
-            int n = note / 12 - 1;
-            int m = note % 12;
-
-            char ch = NOTE_STR[m];
-            StringBuilder sb = new StringBuilder(3);
-            sb.Append(ch);
-            if (m == 1 || m == 3 || m == 6 || m == 8 || m == 10) sb.Append('#');
-            sb.Append(n);
-            return sb.ToString();
         }
 
         private static int[] whiteToNote = {-8, -7, -5, -3, -1, 0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19};
