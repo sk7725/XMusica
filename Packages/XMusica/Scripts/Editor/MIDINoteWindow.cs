@@ -28,7 +28,7 @@ namespace XMusica.Editor {
         private int viewOctave;
 
         public static void ShowWindow(SerializedProperty property) {
-            var window = CreateInstance<MIDINoteWindow>();
+            var window = GetWindow<MIDINoteWindow>(true);
 
             window.target = property.serializedObject;
             window.property = property;
@@ -39,6 +39,10 @@ namespace XMusica.Editor {
             window.maxSize = window.minSize;
 
             window.ShowUtility();
+        }
+
+        private void OnSelectionChange() {
+            Close();
         }
 
         private void InitializeStyles() {
@@ -130,7 +134,7 @@ namespace XMusica.Editor {
             for(int i = 0; i < EDGE_KEYS * 2 + 7; i++) {
                 int now = GetNoteOfWhiteKey(i);
                 GUI.backgroundColor = now == currentNote ? whiteKeySelectedColor : ((now < 21 || now > 127) ? whiteKeyDisabledColor : (i < EDGE_KEYS || i >= EDGE_KEYS + 7) ? whiteKeyOutrangeColor : whiteKeyColor);
-                bool b1 = GUI.Button(new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight), GetNoteString(now), whiteKeyStyle);
+                bool b1 = GUI.Button(new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight - border), GetNoteString(now), whiteKeyStyle);
                 int j = (i + 7 - EDGE_KEYS) % 7;
                 bool hasLeftBit = j == 3 || j == 0 || i == 0; bool hasRightBit = j == 2 || j == 6 || i == EDGE_KEYS * 2 + 6;
                 bool b2 = GUI.Button(new Rect(hasLeftBit ? x : x + blackKeyWidth * 0.5f, total.y, keyWidth - blackKeyWidth * ((hasLeftBit ? 0 : 0.5f) + (hasRightBit ? 0 : 0.5f)), blackKeyHeight), "", whiteKeyStyle);
