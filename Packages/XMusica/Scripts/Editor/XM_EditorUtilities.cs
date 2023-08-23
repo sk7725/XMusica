@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace XMusica.EditorUtilities {
+namespace XMusica.Editor {
     public static class XM_EditorUtilities {
         /// <summary>
         /// Returns the relative path of the package.
