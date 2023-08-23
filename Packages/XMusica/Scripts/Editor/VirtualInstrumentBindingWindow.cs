@@ -35,8 +35,8 @@ namespace XMusica.Editor {
         [SerializeField]
         private VirtualInstrumentBinding selected;
 
-        private static float offset = 5, border = 3;
-        private static float lineHeight = EditorGUIUtility.singleLineHeight, fieldMaxWidth = 400;
+        private static float border = 3;
+        private static float fieldMaxWidth = 400, velocityPreviewWidth = 400, velocityPreviewHeight = 100;
         private static float keyWidth = 25, keyHeight = 120, blackKeyWidth = 18, blackKeyHeight = 70;
 
         [SerializeField]
@@ -50,7 +50,7 @@ namespace XMusica.Editor {
         private bool changed;
         [SerializeField] private PianoState pianoState = PianoState.None;
 
-        [SerializeField] private Vector2 scrollPianoPos;
+        [SerializeField] private Vector2 scrollPianoPos, scrollWindowPos;
 
         public enum PianoState {
             None,
@@ -106,12 +106,14 @@ namespace XMusica.Editor {
             i_noBinding.image = XM_UIStyleManager.vinstBinderWindowIcon;
             i_currentBinding.image = XM_UIStyleManager.vinstBinderWindowIcon;
 
+            scrollWindowPos = EditorGUILayout.BeginScrollView(scrollWindowPos);
             if (selected != null) {
                 SelectedMenuGUI();
             }
             else {
                 CreateMenuGUI();
             }
+            EditorGUILayout.EndScrollView();
         }
         #endregion
 
@@ -188,7 +190,7 @@ namespace XMusica.Editor {
             if (input != -1) HandleNoteClick(input);
 
             GUILayout.Space(5);
-            if (GUILayout.Button("Disable Even-spaced Note Samples", GUILayout.Width(fieldMaxWidth))) {
+            if (GUILayout.Button("Disable Even-Spaced Note Samples", GUILayout.Width(fieldMaxWidth))) {
                 generationData.useEvenNoteSpacings = false;
                 changed = true;
                 GUI.FocusControl("");
@@ -334,11 +336,10 @@ namespace XMusica.Editor {
 
         private string GetNoteSamplesGuide() {
             StringBuilder sb = new("Samples: ");
-            int size = 0;
-            for(int i = generationData.noteStartPos; i <= generationData.noteEndCutoff; i += generationData.noteSampleDist) {
-                size++;
-                sb.Append(XM_Utilities.GetNoteString(i));
-                sb.Append(',');
+            int size = XM_Utilities.GetNoteSamplesRequired(generationData);
+            for(int i = 0; i < size; i++) {
+                sb.Append(XM_Utilities.GetNoteString(generationData.noteStartPos + i * generationData.noteSampleDist));
+                if(i < size - 1) sb.Append(',');
                 sb.Append(' ');
             }
 
@@ -359,7 +360,7 @@ namespace XMusica.Editor {
 
         private void EnableNoteGeneration() {
             EditorGUILayout.HelpBox("Even-spaced sample structure generation for notes is disabled for this Virtual Instrument. Would you like to enable even-spaced samples? Caution: this will override the current sample settings!", MessageType.Warning, true);
-            if(GUILayout.Button("Enable Even-spaced Note Samples", GUILayout.Width(fieldMaxWidth))){
+            if(GUILayout.Button("Enable Even-Spaced Note Samples", GUILayout.Width(fieldMaxWidth))){
                 generationData.useEvenNoteSpacings = true;
                 changed = true;
             }
@@ -374,27 +375,80 @@ namespace XMusica.Editor {
             VelocityPreview();
 
             GUILayout.Space(5);
-            if (GUILayout.Button("Disable Even-spaced Velocity Samples", GUILayout.Width(fieldMaxWidth))) {
+            if (GUILayout.Button("Disable Even-Spaced Velocity Samples", GUILayout.Width(fieldMaxWidth))) {
                 generationData.useEvenVelocitySpacings = false;
                 changed = true;
                 GUI.FocusControl("");
             }
         }
 
+        Rect graphicRect;
+
         private void VelocityPreview() {
-            //todo
             GUILayout.Label(t_velocityPreview, EditorStyles.boldLabel, GUILayout.Height(30));
+
+            EditorGUILayout.HelpBox(GetVelocitySamplesGuide(), MessageType.Info);
+
+            Rect scrollRect = EditorGUILayout.GetControlRect(true, velocityPreviewHeight + border * 2, GUILayout.Width(velocityPreviewWidth + border * 2));
+
+            Rect total = new Rect(scrollRect.x + border, scrollRect.y + border, scrollRect.width - border, scrollRect.height - border);
+
+            Color defColor = GUI.backgroundColor;
+            GUI.backgroundColor = Color.black;
+            GUI.Box(total, "");
+            GUI.backgroundColor = defColor;
+            SetGraphicTarget(total);
+            int size = generationData.velocitySamples;
+
+            //draw each sample poly
+            for (int i = 0; i < size; i++) {
+                float f = generationData.GetVelocitySampleAt(i) / 127f;
+                float f2 = i == 0 ? 0 : generationData.GetVelocitySampleAt(i - 1) / 127f;
+                Handles.color = XM_EditorUtilities.GetDiagramColor(size, i, 1, 0.5f);
+                Handles.DrawAAConvexPolygon(GPos(f, 1 - f), GPos(f, 1), GPos(f2, 1), GPos(f2, 1 - f2));
+            }
+
+            //draw each sample line
+            for (int i = 0; i < size; i++) {
+                float f = generationData.GetVelocitySampleAt(i) / 127f;
+                Handles.color = XM_EditorUtilities.GetDiagramColor(size, i);
+                Handles.DrawLine(GPos(f, 0), GPos(f, 1), 1f);
+            }
+        }
+
+        private void SetGraphicTarget(Rect rect) {
+            graphicRect = rect;
+        }
+
+        private Vector2 GPos(float x, float y) {
+            return graphicRect.position + new Vector2(x * graphicRect.width, y * graphicRect.height);
+        }
+
+        private string GetVelocitySamplesGuide() {
+            StringBuilder sb = new("Samples: ");
+            int size = generationData.velocitySamples;
+            for (int i = 0; i < size; i++) {
+                sb.Append(generationData.GetVelocitySampleAt(i));
+                if (i < size - 1) sb.Append(',');
+                sb.Append(' ');
+            }
+
+            sb.Append('(');
+            sb.Append(size);
+            sb.Append(')');
+            return sb.ToString();
         }
 
         private void EnableVelGeneration() {
             EditorGUILayout.HelpBox("Even-spaced sample structure generation for velocity is disabled for this Virtual Instrument. Would you like to enable even-spaced samples? Caution: this will override the current sample settings!", MessageType.Warning, true);
-            if (GUILayout.Button("Enable Even-spaced Velocity Samples", GUILayout.Width(fieldMaxWidth))) {
+            if (GUILayout.Button("Enable Even-Spaced Velocity Samples", GUILayout.Width(fieldMaxWidth))) {
                 generationData.useEvenVelocitySpacings = true;
                 changed = true;
             }
         }
         #endregion
 
+        #region RoundRobinGUI
         private void RoundRobinSettings() {
             generationData.roundRobins = IntField(k_roundRobins, generationData.roundRobins, true);
 
@@ -408,6 +462,7 @@ namespace XMusica.Editor {
         private int GetTotalSamplesRequired(VInstGenerationData data) {
             return XM_Utilities.GetNoteSamplesRequired(data) * data.velocitySamples * data.roundRobins;
         }
+        #endregion
 
         private void SaveMenu() {
             if (isDirty) {

@@ -32,5 +32,9 @@ namespace XMusica {
 
         //round robin
         public int roundRobins;
+
+        public int GetVelocitySampleAt(int index) {
+            return 127 - (velocitySamples - index - 1) * 127 / velocitySamples;
+        }
     }
 }
