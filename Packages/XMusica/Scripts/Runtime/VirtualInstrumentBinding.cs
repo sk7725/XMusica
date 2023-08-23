@@ -12,10 +12,11 @@ namespace XMusica {
         /// <summary>
         /// Converts requested velocity -> sample id(j)
         /// </summary>
-        [SerializeField] private int[] boundVelocity = new int[127];
-        [SerializeField] private SampleData[][] samples = { };
+        [SerializeField] private int[] boundVelocity = new int[128];
+        [SerializeField] private SampleData[,,] samples = { };
         [SerializeField] public VInstGenerationData generationData = VInstGenerationData.Default;
 
+        private int roundRobin;
 
         [System.Serializable]
         public struct SampleData {
@@ -31,7 +32,19 @@ namespace XMusica {
         }
 
         private SampleData GetBindData(int note, int velocity) {
-            return samples[boundNote[note - MIN_NOTE]][boundVelocity[velocity]];
+            return samples[boundNote[note - MIN_NOTE], boundVelocity[velocity], PollRoundRobin()];
+        }
+
+        private int PollRoundRobin() {
+            roundRobin = (roundRobin + 1) % samples.GetLength(2);
+            return roundRobin;
+        }
+
+        /// <summary>
+        /// Returns whether the virtual instrument has valid binding.
+        /// </summary=
+        public bool HasGeneratedSamples() {
+            return samples != null && samples.Length > 0;
         }
 
         /// <summary>
@@ -96,6 +109,43 @@ namespace XMusica {
 
         public static bool IsValidVelocity(int velocity) {
             return velocity >= 0 && velocity <= 127;
+        }
+
+        public void ApplyGeneration(VInstGenerationData data) {
+            //todo
+            generationData = data;
+
+            if (samples == null) samples = new SampleData[0, 0, 0];
+            int noteSamples = data.useEvenNoteSpacings ? XM_Utilities.GetNoteSamplesRequired(data) : Mathf.Max(1, samples.Length);
+            int velocitySamples = data.useEvenVelocitySpacings ? data.velocitySamples : Mathf.Max(1, samples.GetLength(1));
+            int rrSamples = data.roundRobins;
+
+            var oldSamples = samples;
+            samples = new SampleData[noteSamples, velocitySamples, rrSamples];
+
+            //fry sample ids
+            for(int i = MIN_NOTE; i <= MAX_NOTE; i++) {
+                boundNote[i - MIN_NOTE] = XM_Utilities.GetEstimatedReferenceNoteIndex(i, data);
+            }
+            int current_vel = 0;
+            for(int i = 0; i < 128; i++) {
+                int v = data.GetVelocitySampleAt(current_vel);
+                if (i > v) {
+                    current_vel++;
+                    v = data.GetVelocitySampleAt(current_vel);
+                }
+                boundVelocity[i] = v;
+            }
+
+            //recover old samples
+            int n = Mathf.Min(oldSamples.GetLength(0), samples.GetLength(0)); int m = Mathf.Min(oldSamples.GetLength(1), samples.GetLength(1)); int r = Mathf.Min(oldSamples.GetLength(2), samples.GetLength(2));
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    for (int k = 0; k < r; k++) {
+                        samples[i, j, k] = oldSamples[i, j, k];
+                    }
+                }
+            }
         }
     }
 }

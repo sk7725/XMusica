@@ -30,6 +30,8 @@ namespace XMusica.Editor {
 
         static readonly GUIContent k_save = new GUIContent("Apply");
         static readonly GUIContent k_revert = new GUIContent("Revert");
+        static readonly GUIContent k_generate = new GUIContent("Generate");
+        static readonly GUIContent k_reset = new GUIContent("Reset to Default");
         #endregion
 
         [SerializeField]
@@ -412,7 +414,7 @@ namespace XMusica.Editor {
             for (int i = 0; i < size; i++) {
                 float f = generationData.GetVelocitySampleAt(i) / 127f;
                 Handles.color = XM_EditorUtilities.GetDiagramColor(size, i);
-                Handles.DrawLine(GPos(f, 0), GPos(f, 1), 1f);
+                Handles.DrawLine(GPos(f, 0), GPos(f, 1));
             }
         }
 
@@ -465,21 +467,44 @@ namespace XMusica.Editor {
         #endregion
 
         private void SaveMenu() {
-            if (isDirty) {
-                EditorGUILayout.HelpBox("You have unapplied changes!", MessageType.Warning, true);
+            if (selected.HasGeneratedSamples()) {
+                if (isDirty) {
+                    EditorGUILayout.HelpBox("You have unapplied changes!", MessageType.Warning, true);
+                }
+                EditorGUI.BeginDisabledGroup(!isDirty);
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(k_save, GUILayout.Width(140))) {
+                    ApplyGenerationData();
+                }
+                if (GUILayout.Button(k_revert, GUILayout.Width(140))) {
+                    isDirty = false;
+                    generationData = selected.generationData;
+                }
+                GUILayout.EndHorizontal();
+                EditorGUI.EndDisabledGroup();
             }
+            else {
+                EditorGUILayout.HelpBox("Press generate to generate sample bindings.", MessageType.Info, true);
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(k_generate, GUILayout.Width(140))) {
+                    ApplyGenerationData();
+                }
+                if (GUILayout.Button(k_reset, GUILayout.Width(140))) {
+                    isDirty = false;
+                    generationData = selected.generationData;
+                }
+                GUILayout.EndHorizontal();
+            }
+        }
 
-            EditorGUI.BeginDisabledGroup(!isDirty);
-            GUILayout.BeginHorizontal();
-            if(GUILayout.Button(k_save, GUILayout.Width(100))) {
-                //todo
-            }
-            if(GUILayout.Button(k_revert, GUILayout.Width(100))) {
-                isDirty = false;
-                generationData = selected.generationData;
-            }
-            GUILayout.EndHorizontal();
-            EditorGUI.EndDisabledGroup();
+        private void ApplyGenerationData() {
+            selected.ApplyGeneration(generationData);
+
+            Debug.Log("Generated sample bindings!");
+            EditorUtility.SetDirty(selected);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            isDirty = false;
         }
 
         private int IntField(GUIContent content, int defValue, bool onlyPositive = false) {
