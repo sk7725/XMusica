@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace XMusica.Editor {
+namespace XMusica.EditorUtilities {
     public static class XM_EditorUtilities {
         /// <summary>
         /// Returns the relative path of the package.

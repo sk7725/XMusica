@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace XMusica.Editor {
+namespace XMusica.EditorUtilities {
     public static class XM_UIStyleManager {
         public static GUIStyle whitePianoKey;
         public static GUIStyle blackPianoKey;

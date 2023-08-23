@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace XMusica {
     /// <summary>
-    /// Holds generation data of a VInst binding. THe data is only used at initial generation and possible recovery of corrupted assets.
+    /// Holds generation data of a VInst binding.
     /// </summary>
     [System.Serializable]
     public struct VInstGenerationData {

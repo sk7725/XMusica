@@ -4,7 +4,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace XMusica.Editor {
+namespace XMusica.EditorUtilities {
     [CustomPropertyDrawer(typeof(MIDINoteAttribute))]
     public class MIDINoteDrawer : PropertyDrawer {
         GUIContent noteNameContent = new();

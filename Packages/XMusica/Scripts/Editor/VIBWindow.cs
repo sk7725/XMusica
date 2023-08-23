@@ -5,8 +5,8 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace XMusica.Editor {
-    public class VirtualInstrumentBindingWindow : EditorWindow {
+namespace XMusica.EditorUtilities {
+    public class VIBWindow : EditorWindow {
         #region GUIContent
         static GUIContent i_noBinding = new GUIContent("There is no Virtual Instrument Binding selected. Would you like to create a new binding?");
         static GUIContent i_currentBinding = new GUIContent();
@@ -32,13 +32,14 @@ namespace XMusica.Editor {
         static readonly GUIContent k_revert = new GUIContent("Revert");
         static readonly GUIContent k_generate = new GUIContent("Generate");
         static readonly GUIContent k_reset = new GUIContent("Reset to Default");
+        static readonly GUIContent k_selectAsset = new GUIContent("Select Asset");
         #endregion
 
         [SerializeField]
         private VirtualInstrumentBinding selected;
 
         private static float border = 3;
-        private static float fieldMaxWidth = 400, velocityPreviewWidth = 400, velocityPreviewHeight = 100;
+        private static float fieldMaxWidth = 400, velocityPreviewWidth = 400, velocityPreviewHeight = 100, buttonWidth = 140;
         private static float keyWidth = 25, keyHeight = 120, blackKeyWidth = 18, blackKeyHeight = 70;
 
         [SerializeField]
@@ -71,7 +72,7 @@ namespace XMusica.Editor {
         public static void ShowWindow() {
             Debug.Log(XM_EditorUtilities.packageRelativePath);
 
-            var window = GetWindow<VirtualInstrumentBindingWindow>();
+            var window = GetWindow<VIBWindow>();
             window.titleContent = new GUIContent("VInst Binder", XM_UIStyleManager.vinstBinderWindowIcon);
             window.Show();
         }
@@ -131,6 +132,10 @@ namespace XMusica.Editor {
         private void SelectedMenuGUI() {
             i_currentBinding.text = $"{selected.name}{(isDirty ? "*" : "")} ({AssetDatabase.GetAssetPath(selected)})";
             GUILayout.Label(i_currentBinding, GUILayout.Height(40f));
+            GUILayout.Space(5);
+            if (GUILayout.Button(k_selectAsset, GUILayout.Width(buttonWidth))) {
+                EditorGUIUtility.PingObject(selected);
+            }
             GUILayout.Space(10);
 
             changed = false;
@@ -473,10 +478,10 @@ namespace XMusica.Editor {
                 }
                 EditorGUI.BeginDisabledGroup(!isDirty);
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button(k_save, GUILayout.Width(140))) {
+                if (GUILayout.Button(k_save, GUILayout.Width(buttonWidth))) {
                     ApplyGenerationData();
                 }
-                if (GUILayout.Button(k_revert, GUILayout.Width(140))) {
+                if (GUILayout.Button(k_revert, GUILayout.Width(buttonWidth))) {
                     isDirty = false;
                     generationData = selected.generationData;
                 }
@@ -486,10 +491,10 @@ namespace XMusica.Editor {
             else {
                 EditorGUILayout.HelpBox("Press generate to generate sample bindings.", MessageType.Info, true);
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button(k_generate, GUILayout.Width(140))) {
+                if (GUILayout.Button(k_generate, GUILayout.Width(buttonWidth))) {
                     ApplyGenerationData();
                 }
-                if (GUILayout.Button(k_reset, GUILayout.Width(140))) {
+                if (GUILayout.Button(k_reset, GUILayout.Width(buttonWidth))) {
                     isDirty = false;
                     generationData = selected.generationData;
                 }

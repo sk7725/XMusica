@@ -4,7 +4,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace XMusica.Editor {
+namespace XMusica.EditorUtilities {
     public class MIDINoteWindow : EditorWindow {
         private const int EDGE_KEYS = 5;
 

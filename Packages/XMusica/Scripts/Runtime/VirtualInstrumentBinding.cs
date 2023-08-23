@@ -36,7 +36,9 @@ namespace XMusica {
         }
 
         private int PollRoundRobin() {
-            roundRobin = (roundRobin + 1) % samples.GetLength(2);
+            int l = samples.GetLength(2);
+            if (l <= 1) return 0;
+            roundRobin = (roundRobin + 1) % l;
             return roundRobin;
         }
 
