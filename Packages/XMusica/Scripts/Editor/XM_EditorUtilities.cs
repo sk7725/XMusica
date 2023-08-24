@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -139,6 +140,10 @@ namespace XMusica.EditorUtilities {
             }
 
             return null;
+        }
+
+        public static Type[] GetDockTargets() {
+            return new Type[] { typeof(VIBWindow), typeof(VISampleWindow), typeof(VITestWindow), typeof(SceneView) };
         }
     }
 }

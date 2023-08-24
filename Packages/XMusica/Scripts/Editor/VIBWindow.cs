@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -72,7 +70,7 @@ namespace XMusica.EditorUtilities {
         #region Base
         [MenuItem("XMusica/Virtual Instrument Binder", priority = 0)]
         public static void ShowWindow() {
-            var window = GetWindow<VIBWindow>();
+            var window = GetWindow<VIBWindow>(XM_EditorUtilities.GetDockTargets());
             window.titleContent = new GUIContent("VInst Binder", XM_UIStyleManager.vinstBinderWindowIcon);
             window.saveChangesMessage = s_unsaved;
             window.Show();

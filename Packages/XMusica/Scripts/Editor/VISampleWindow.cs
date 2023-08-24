@@ -26,7 +26,7 @@ namespace XMusica.EditorUtilities {
         #region Base
         [MenuItem("XMusica/Virtual Instrument Sample Assigner", priority = 1)]
         public static void ShowWindow() {
-            var window = GetWindow<VISampleWindow>();
+            var window = GetWindow<VISampleWindow>(XM_EditorUtilities.GetDockTargets());
             window.titleContent = new GUIContent("VInst Samples", XM_UIStyleManager.vinstSampleWindowIcon);
             window.Show();
         }

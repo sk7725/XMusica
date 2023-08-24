@@ -18,11 +18,9 @@ namespace XMusica.EditorUtilities {
         private static Color whiteKeyColor = new Color(0.8f, 0.8f, 0.8f), blackKeyColor = new Color(0.2f, 0.2f, 0.2f);
         private static Color whiteKeySelectedColor = Color.yellow, blackKeySelectedColor = new Color(0.8f, 0.8f, 0f);
         private static Color whiteKeyDisabledColor = new Color(0.3f, 0.3f, 0.3f), blackKeyDisabledColor = new Color(0.25f, 0.25f, 0.25f);
-        private const float whiteKeyS = 0.2f, whiteKeyV = 1f;
-        private const float blackKeyS = 0.4f, blackKeyV = 0.4f;
 
         private static float border = 3;
-        private static float fieldMaxWidth = 400, velocityPreviewWidth = 400, velocityPreviewHeight = 100, buttonWidth = 140;
+        private static float buttonWidth = 140;
         private static float keyWidth = 25, keyHeight = 120, blackKeyWidth = 18, blackKeyHeight = 70;
 
         [SerializeField] private Vector2 scrollPianoPos, scrollWindowPos;
@@ -33,7 +31,7 @@ namespace XMusica.EditorUtilities {
         #region Base
         [MenuItem("XMusica/Virtual Instrument Tester", priority = 2)]
         public static void ShowWindow() {
-            var window = GetWindow<VITestWindow>();
+            var window = GetWindow<VITestWindow>(XM_EditorUtilities.GetDockTargets());
             window.titleContent = new GUIContent("VInst Tester", XM_UIStyleManager.vinstTesterWindowIcon);
             window.Show();
         }

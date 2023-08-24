@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.0] - 2023-07-15
+### Changes
+- VInst editor windows now dock, preferring other VInst windows and then the scene view.
+- Cleanup unused fields.
+
 ## [1.0.0] - 2023-07-15
 ### Additions
 - This is the first official release of XMusica.
