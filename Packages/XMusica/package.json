@@ -1,6 +1,6 @@
 {
   "name": "com.xreal.xmusica",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "displayName": "XMusica",
   "description": "A C# port of a sfz-like virtual instrument binder. Create virtual instruments with just a few samples!",
   "unity": "2021.3",

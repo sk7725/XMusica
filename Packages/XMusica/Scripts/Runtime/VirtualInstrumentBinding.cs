@@ -39,7 +39,7 @@ namespace XMusica {
         }
 
         private int PollRoundRobin() {
-            int l = samples.GetLength(2);
+            int l = samples[0][0].Length;
             if (l <= 1) return 0;
             roundRobin = (roundRobin + 1) % l;
             return roundRobin;
@@ -154,9 +154,8 @@ namespace XMusica {
                 int v = data.GetVelocitySampleAt(current_vel);
                 if (i > v) {
                     current_vel++;
-                    v = data.GetVelocitySampleAt(current_vel);
                 }
-                boundVelocity[i] = v;
+                boundVelocity[i] = current_vel;
             }
 
             //recover old samples
@@ -180,7 +179,7 @@ namespace XMusica {
                     for (int k = 0; k < r; k++) {
                         samples[i][j][k].sampleNote = data.GetNoteSampleAt(i);
                         samples[i][j][k].sampleVelocity = data.GetVelocitySampleAt(j);
-                        samples[i][j][k].volumeMultiplier = 1f; //todo
+                        samples[i][j][k].volumeMultiplier = 1f; //todo volume multiplier
                     }
                 }
             }

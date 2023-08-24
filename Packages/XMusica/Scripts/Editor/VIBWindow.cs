@@ -33,6 +33,8 @@ namespace XMusica.EditorUtilities {
         static readonly GUIContent k_generate = new GUIContent("Generate");
         static readonly GUIContent k_reset = new GUIContent("Reset to Default");
         static readonly GUIContent k_selectAsset = new GUIContent("Select Asset");
+
+        static readonly string s_unsaved = "You have unapplied binding generation settings. Would you like to apply the changes?";
         #endregion
 
         [SerializeField]
@@ -72,6 +74,7 @@ namespace XMusica.EditorUtilities {
         public static void ShowWindow() {
             var window = GetWindow<VIBWindow>();
             window.titleContent = new GUIContent("VInst Binder", XM_UIStyleManager.vinstBinderWindowIcon);
+            window.saveChangesMessage = s_unsaved;
             window.Show();
         }
 
@@ -88,6 +91,19 @@ namespace XMusica.EditorUtilities {
                 //todo warn save popup
                 lastGenerationData = generationData;
                 lastSelected = selected;
+
+                int option = EditorUtility.DisplayDialogComplex("Unsaved Changes", s_unsaved, "Apply", "Cancel", "Discard");
+                switch (option) {
+                    case 0://save
+                        SaveChanges();
+                        break;
+                    case 1://cancel
+                        Selection.activeObject = lastSelected;
+                        return;
+                    case 2://discard
+                        DiscardChanges();
+                        break;
+                }
             }
 
             if (Selection.activeObject is VirtualInstrumentBinding vb) {
@@ -173,6 +189,7 @@ namespace XMusica.EditorUtilities {
 
             if (changed) {
                 isDirty = true;
+                hasUnsavedChanges = true;
             }
         }
         #endregion
@@ -475,11 +492,10 @@ namespace XMusica.EditorUtilities {
                 EditorGUI.BeginDisabledGroup(!isDirty);
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button(k_save, GUILayout.Width(buttonWidth))) {
-                    ApplyGenerationData();
+                    SaveChanges();
                 }
                 if (GUILayout.Button(k_revert, GUILayout.Width(buttonWidth))) {
-                    isDirty = false;
-                    generationData = selected.generationData;
+                    DiscardChanges();
                 }
                 GUILayout.EndHorizontal();
                 EditorGUI.EndDisabledGroup();
@@ -488,24 +504,35 @@ namespace XMusica.EditorUtilities {
                 EditorGUILayout.HelpBox("Press generate to generate sample bindings.", MessageType.Info, true);
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button(k_generate, GUILayout.Width(buttonWidth))) {
-                    ApplyGenerationData();
+                    SaveChanges();
                 }
                 if (GUILayout.Button(k_reset, GUILayout.Width(buttonWidth))) {
-                    isDirty = false;
-                    generationData = selected.generationData;
+                    DiscardChanges();
                 }
                 GUILayout.EndHorizontal();
             }
         }
 
-        private void ApplyGenerationData() {
-            selected.ApplyGeneration(generationData);
+        public override void SaveChanges() {
+            if (selected != null) {
+                selected.ApplyGeneration(generationData);
 
-            Debug.Log("Generated sample bindings!");
-            EditorUtility.SetDirty(selected);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            isDirty = false;
+                Debug.Log("Generated sample bindings!");
+                EditorUtility.SetDirty(selected);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                isDirty = false;
+            }
+            base.SaveChanges();
+        }
+
+        public override void DiscardChanges() {
+            if(selected != null) {
+                isDirty = false;
+                generationData = selected.generationData;
+            }
+
+            base.DiscardChanges();
         }
 
         private int IntField(GUIContent content, int defValue, bool onlyPositive = false) {

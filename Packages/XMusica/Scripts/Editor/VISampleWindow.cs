@@ -6,7 +6,7 @@ using UnityEngine;
 namespace XMusica.EditorUtilities {
     public class VISampleWindow : EditorWindow {
         #region GUIContent
-        static GUIContent i_noBinding = new GUIContent("There is no Virtual Instrument Binding selected. Please select a VIrtual Instrument Binding or create one in the Binder window.");
+        static GUIContent i_noBinding = new GUIContent("There is no Virtual Instrument Binding selected. Please select a Virtual Instrument Binding or create one in the Binder window.");
         static GUIContent i_currentBinding = new GUIContent();
         static readonly GUIContent t_samples = new GUIContent("Sample Matrix");
 
