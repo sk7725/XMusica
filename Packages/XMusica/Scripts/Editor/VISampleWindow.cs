@@ -19,7 +19,7 @@ namespace XMusica.EditorUtilities {
         [SerializeField] private int s_notes, s_vel, s_rr;
         [SerializeField] private Vector2 scrollWindowPos, scrollMatrixPos;
 
-        private static float fieldMaxWidth = 400, buttonWidth = 140, border = 3;
+        private static float buttonWidth = 140, border = 3;
         private static float lineHeight = EditorGUIUtility.singleLineHeight, lineWidth = 300, cellBorder = 2;
         private static float noteLabelWidth = 120, velocityLabelHeight = 50;
 
@@ -88,7 +88,6 @@ namespace XMusica.EditorUtilities {
             bool changed = DrawSampleMatrix();
 
             if (changed) {
-                Debug.Log("uwu");
                 SaveAsset();
             }
         }
@@ -174,7 +173,7 @@ namespace XMusica.EditorUtilities {
 
             float y = rect.y + lineHeight;
             for (int k = 0; k < s_rr; k++) {
-                selected.Samples[i][j][0].clip = (AudioClip)EditorGUI.ObjectField(new Rect(rect.x, y, rect.width, lineHeight), selected.Samples[i][j][k].clip, typeof(AudioClip), false);
+                selected.Samples[i][j][k].clip = (AudioClip)EditorGUI.ObjectField(new Rect(rect.x, y, rect.width, lineHeight), selected.Samples[i][j][k].clip, typeof(AudioClip), false);
                 y += lineHeight;
             }
         }

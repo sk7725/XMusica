@@ -159,9 +159,7 @@
       "version": "file:XMusica",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {
-        "com.unity.textmeshpro": "3.0.6"
-      }
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
