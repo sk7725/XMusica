@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace XMusica {
-    public sealed class VirtualInstrumentBinding : ScriptableObject {
+    public sealed class VirtualInstrumentBinding : ScriptableObject, ISerializationCallbackReceiver {
         private const int MIN_NOTE = 21, MAX_NOTE = 127;
         /// <summary>
         /// Converts requested note -> sample id(i)
@@ -13,8 +13,11 @@ namespace XMusica {
         /// Converts requested velocity -> sample id(j)
         /// </summary>
         [SerializeField] private int[] boundVelocity = new int[128];
-        [SerializeField] private SampleData[,,] samples = { };
         [SerializeField] public VInstGenerationData generationData = VInstGenerationData.Default;
+
+        private SampleData[][][] samples = { };
+
+        public SampleData[][][] Samples => samples;
 
         private int roundRobin;
 
@@ -32,7 +35,7 @@ namespace XMusica {
         }
 
         private SampleData GetBindData(int note, int velocity) {
-            return samples[boundNote[note - MIN_NOTE], boundVelocity[velocity], PollRoundRobin()];
+            return samples[boundNote[note - MIN_NOTE]][boundVelocity[velocity]][PollRoundRobin()];
         }
 
         private int PollRoundRobin() {
@@ -105,6 +108,18 @@ namespace XMusica {
             source.Play();
         }
 
+        public void GetSampleDimensions(out int n, out int m, out int r) {
+            n = samples.Length;
+            m = n == 0 ? 0 : samples[0].Length;
+            r = m == 0 ? 0 : samples[0][0].Length;
+        }
+
+        private void GetSampleDimensionsInternal(SampleData[][][] samples, out int n, out int m, out int r) {
+            n = samples.Length;
+            m = n == 0 ? 0 : samples[0].Length;
+            r = m == 0 ? 0 : samples[0][0].Length;
+        }
+
         public static bool IsValidNote(int note) {
             return note >= MIN_NOTE && note <= MAX_NOTE;
         }
@@ -114,16 +129,21 @@ namespace XMusica {
         }
 
         public void ApplyGeneration(VInstGenerationData data) {
-            //todo
             generationData = data;
 
-            if (samples == null) samples = new SampleData[0, 0, 0];
+            if (samples == null) samples = new SampleData[0][][];
             int noteSamples = data.useEvenNoteSpacings ? XM_Utilities.GetNoteSamplesRequired(data) : Mathf.Max(1, samples.Length);
             int velocitySamples = data.useEvenVelocitySpacings ? data.velocitySamples : Mathf.Max(1, samples.GetLength(1));
             int rrSamples = data.roundRobins;
 
             var oldSamples = samples;
-            samples = new SampleData[noteSamples, velocitySamples, rrSamples];
+            samples = new SampleData[noteSamples][][];
+            for (int i = 0; i < noteSamples; i++) {
+                samples[i] = new SampleData[velocitySamples][];
+                for (int j = 0; j < velocitySamples; j++) {
+                    samples[i][j] = new SampleData[rrSamples];
+                }
+            }
 
             //fry sample ids
             for(int i = MIN_NOTE; i <= MAX_NOTE; i++) {
@@ -140,14 +160,55 @@ namespace XMusica {
             }
 
             //recover old samples
-            int n = Mathf.Min(oldSamples.GetLength(0), samples.GetLength(0)); int m = Mathf.Min(oldSamples.GetLength(1), samples.GetLength(1)); int r = Mathf.Min(oldSamples.GetLength(2), samples.GetLength(2));
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < m; j++) {
-                    for (int k = 0; k < r; k++) {
-                        samples[i, j, k] = oldSamples[i, j, k];
+            if (samples.Length > 0 && oldSamples.Length > 0) {
+                GetSampleDimensionsInternal(oldSamples, out int nn, out int mm, out int rr);
+                GetSampleDimensionsInternal(samples, out int ni, out int mi, out int ri);
+                int n = Mathf.Min(nn, ni); int m = Mathf.Min(mm, mi); int r = Mathf.Min(rr, ri);
+                for (int i = 0; i < n; i++) {
+                    for (int j = 0; j < m; j++) {
+                        for (int k = 0; k < r; k++) {
+                            samples[i][j][k] = oldSamples[i][j][k];
+                        }
                     }
                 }
             }
         }
+
+        #region Serialization
+        [SerializeField] private SampleData[] serialized_samples = { };
+        [SerializeField] private int samples_dim_0, samples_dim_1, samples_dim_2;
+
+        public void OnBeforeSerialize() {
+            GetSampleDimensions(out samples_dim_0, out samples_dim_1, out samples_dim_2);
+            int length = samples_dim_0 * samples_dim_1 * samples_dim_2;
+
+            if(serialized_samples.Length != length) serialized_samples = new SampleData[length];
+            for (int i = 0; i < samples_dim_0; i++) {
+                for (int j = 0; j < samples_dim_1; j++) {
+                    for (int k = 0; k < samples_dim_2; k++) {
+                        serialized_samples[i * samples_dim_1 * samples_dim_2 + j * samples_dim_2 + k] = samples[i][j][k];
+                    }
+                }
+            }
+        }
+
+        public void OnAfterDeserialize() {
+            samples = new SampleData[samples_dim_0][][];
+            for (int i = 0; i < samples_dim_0; i++) {
+                samples[i] = new SampleData[samples_dim_1][];
+                for (int j = 0; j < samples_dim_1; j++) {
+                    samples[i][j] = new SampleData[samples_dim_2];
+                }
+            }
+
+            for (int i = 0; i < samples_dim_0; i++) {
+                for (int j = 0; j < samples_dim_1; j++) {
+                    for (int k = 0; k < samples_dim_2; k++) {
+                        samples[i][j][k] = serialized_samples[i * samples_dim_1 * samples_dim_2 + j * samples_dim_2 + k];
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

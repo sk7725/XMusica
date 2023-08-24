@@ -22,3 +22,79 @@ MonoBehaviour:
     useEvenVelocitySpacings: 1
     velocitySamples: 2
     roundRobins: 1
+  serialized_samples:
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  - clip: {fileID: 0}
+    sampleNote: 0
+    sampleVelocity: 0
+    volumeMultiplier: 0
+  samples_dim_0: 9
+  samples_dim_1: 2
+  samples_dim_2: 1

@@ -10,12 +10,14 @@ namespace XMusica.EditorUtilities {
         public static GUIStyle dropdown, selectedDropdown;
 
         public static Texture2D vinstBinderWindowIcon;
+        public static Texture2D vinstSampleWindowIcon;
         public static Texture2D whiteKeyTexture;
 
         static XM_UIStyleManager() {
             var path = XM_EditorUtilities.packageRelativePath;
 
             vinstBinderWindowIcon = AssetDatabase.LoadAssetAtPath(path + "/Editor Resources/Textures/vinst_binder_window.png", typeof(Texture2D)) as Texture2D;
+            vinstSampleWindowIcon = AssetDatabase.LoadAssetAtPath(path + "/Editor Resources/Textures/vinst_sample_window.png", typeof(Texture2D)) as Texture2D;
             whiteKeyTexture = AssetDatabase.LoadAssetAtPath(path + "/Editor Resources/Textures/key_white.png", typeof(Texture2D)) as Texture2D;
 
             whitePianoKey = new GUIStyle("button");

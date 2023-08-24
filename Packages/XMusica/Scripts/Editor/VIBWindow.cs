@@ -68,10 +68,8 @@ namespace XMusica.EditorUtilities {
         private const float blackKeyS = 0.4f, blackKeyV = 0.4f;
 
         #region Base
-        [MenuItem("XMusica/Virtual Instrument Binder")]
+        [MenuItem("XMusica/Virtual Instrument Binder", priority = 0)]
         public static void ShowWindow() {
-            Debug.Log(XM_EditorUtilities.packageRelativePath);
-
             var window = GetWindow<VIBWindow>();
             window.titleContent = new GUIContent("VInst Binder", XM_UIStyleManager.vinstBinderWindowIcon);
             window.Show();
@@ -174,7 +172,6 @@ namespace XMusica.EditorUtilities {
             SaveMenu();
 
             if (changed) {
-                Debug.Log("Ooooh...");
                 isDirty = true;
             }
         }
@@ -249,7 +246,6 @@ namespace XMusica.EditorUtilities {
             Rect scrollRect = EditorGUILayout.GetControlRect(true, keyHeight + border * 2 + 18);
             float totalWidth = keyWidth * 70 + border * 2;
             float totalHeight = keyHeight + border * 2;
-            //todo maybe legend
 
             //generate scroll pane
             scrollPianoPos = GUI.BeginScrollView(scrollRect, scrollPianoPos, new Rect(0, 0, totalWidth, totalHeight), true, false);
