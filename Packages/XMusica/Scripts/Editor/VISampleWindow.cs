@@ -11,6 +11,8 @@ namespace XMusica.EditorUtilities {
         static readonly GUIContent t_samples = new GUIContent("Sample Matrix");
 
         static readonly GUIContent k_selectAsset = new GUIContent("Select Asset");
+        static readonly GUIContent k_notes = new GUIContent("Notes");
+        static readonly GUIContent k_velocities = new GUIContent("Velocities");
         #endregion
 
         [SerializeField] private VirtualInstrumentBinding selected;
@@ -116,7 +118,7 @@ namespace XMusica.EditorUtilities {
             for (int i = 0; i < s_notes; i++) {
                 for (int j = 0; j < s_vel; j++) {
                     Rect r = new Rect(x + cellBorder, y + cellBorder, cw - cellBorder, ch - cellBorder);
-                    Color c = XM_EditorUtilities.GetDiagramColor(s_notes, i, 0.5f, i % 2 == 0 ? 0.6f : 0.8f);
+                    Color c = XM_EditorUtilities.GetDiagramColor(s_notes, i, 0.5f, i % 2 == 1 ? 0.6f : 0.8f);
                     DrawCell(r, i, j, c);
                     x += cw;
                 }
@@ -124,14 +126,45 @@ namespace XMusica.EditorUtilities {
                 y += ch;
             }
 
-            //draw title cells
-            //todo
+            //draw note title cells
+            y = total.y + velocityLabelHeight + 2;
+            for(int i = 0; i < s_notes; i++) {
+                Rect r = new Rect(total.x, y, noteLabelWidth, ch);
+                GUI.backgroundColor = XM_EditorUtilities.GetDiagramColor(s_notes, i, 0.8f, i % 2 == 1 ? 0.2f : 0.3f);
+                XM_UIStyleManager.matrixTitle.normal.textColor = XM_UIStyleManager.matrixTitle.hover.textColor = XM_EditorUtilities.GetDiagramColor(s_notes, i, 0.2f);
+                GUI.Box(r, $"{XM_Utilities.GetNoteString(selected.Samples[i][0][0].sampleNote)} (#{i})", XM_UIStyleManager.matrixTitle);
+                y += ch;
+            }
+
+            //draw velocity title cells
+            x = total.x + noteLabelWidth + 2;
+            for (int j = 0; j < s_vel; j++) {
+                Rect r = new Rect(x, total.y, cw, velocityLabelHeight);
+                GUI.backgroundColor = XM_EditorUtilities.GetDiagramColor(s_vel, j, 0.8f, 0.3f);
+                XM_UIStyleManager.matrixTitle.normal.textColor = XM_UIStyleManager.matrixTitle.hover.textColor = XM_EditorUtilities.GetDiagramColor(s_vel, j, 0.2f);
+                GUI.Box(r, $"Velocity {selected.Samples[0][j][0].sampleVelocity} (#{j})", XM_UIStyleManager.matrixTitle);
+                x += cw;
+            }
 
             GUI.backgroundColor = defColor;
+
+            //draw legend
+            DrawLegend(new Rect(total.x, total.y, noteLabelWidth, velocityLabelHeight));
+
             bool ret = EditorGUI.EndChangeCheck();
             GUI.EndScrollView(true);
 
             return ret;
+        }
+
+        private void DrawLegend(Rect rect) {
+            Handles.color = new Color(0.1f, 0.1f, 0.1f);
+            Handles.DrawAAConvexPolygon(rect.min, new Vector3(rect.xMin, rect.yMax), rect.max, new Vector3(rect.xMax, rect.yMin));
+            Handles.color = new Color(0.2f, 0.2f, 0.2f);
+            Handles.DrawAAConvexPolygon(rect.min, new Vector3(rect.xMax, rect.yMin), rect.max);
+            Handles.color = Color.white;
+            Handles.Label(rect.center + new Vector2(-40, 5), k_notes);
+            Handles.Label(rect.center + new Vector2(0, -15), k_velocities);
         }
 
         private void DrawCell(Rect rect, int i, int j, Color color) {
