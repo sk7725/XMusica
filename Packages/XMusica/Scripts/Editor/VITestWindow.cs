@@ -16,6 +16,7 @@ namespace XMusica.EditorUtilities {
         private VirtualInstrumentBinding selected;
 
         private static Color whiteKeyColor = new Color(0.8f, 0.8f, 0.8f), blackKeyColor = new Color(0.2f, 0.2f, 0.2f);
+        private static Color whiteKeyHoverColor = new Color(0.7f, 0.7f, 0.7f), blackKeyHoverColor = new Color(0.3f, 0.3f, 0.3f);
         private static Color whiteKeySelectedColor = Color.yellow, blackKeySelectedColor = new Color(0.8f, 0.8f, 0f);
         private static Color whiteKeyDisabledColor = new Color(0.3f, 0.3f, 0.3f), blackKeyDisabledColor = new Color(0.25f, 0.25f, 0.25f);
 
@@ -33,6 +34,7 @@ namespace XMusica.EditorUtilities {
         public static void ShowWindow() {
             var window = GetWindow<VITestWindow>(XM_EditorUtilities.GetDockTargets());
             window.titleContent = new GUIContent("VInst Tester", XM_UIStyleManager.vinstTesterWindowIcon);
+            window.wantsMouseMove = true;
             window.Show();
         }
 
@@ -57,6 +59,7 @@ namespace XMusica.EditorUtilities {
         }
 
         private void OnGUI() {
+            wantsMouseMove = true;
             i_noBinding.image = XM_UIStyleManager.vinstTesterWindowIcon;
             i_currentBinding.image = XM_UIStyleManager.vinstTesterWindowIcon;
 
@@ -68,6 +71,9 @@ namespace XMusica.EditorUtilities {
                 CreateMenuGUI();
             }
             EditorGUILayout.EndScrollView();
+
+            if (Event.current.type == EventType.MouseMove)
+                Repaint();
         }
         #endregion
 
@@ -108,6 +114,7 @@ namespace XMusica.EditorUtilities {
 
         #region PianoGUI
         private int NotePreview(int highlightNote) {
+            Event evt = Event.current;
             Rect scrollRect = EditorGUILayout.GetControlRect(true, keyHeight + border * 2 + 18);
             float totalWidth = keyWidth * 70 + border * 2;
             float totalHeight = keyHeight + border * 2;
@@ -128,17 +135,22 @@ namespace XMusica.EditorUtilities {
             for (int i = 0; i < 70; i++) {
                 int now = GetNoteOfWhiteKey(i);
 
+                //test mouse hover
+                int j = i % 7;
+                bool hasLeftBit = j == 3 || j == 0 || i == 0; bool hasRightBit = j == 2 || j == 6 || i == 69;
+                Rect r1 = new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight - border);
+                Rect r2 = new Rect(hasLeftBit ? x : x + blackKeyWidth * 0.5f, total.y, keyWidth - blackKeyWidth * ((hasLeftBit ? 0 : 0.5f) + (hasRightBit ? 0 : 0.5f)), blackKeyHeight);
+                bool hovered = r1.Contains(evt.mousePosition) || r2.Contains(evt.mousePosition);
+
                 //determine key color
                 if (now < 21 || now > 127) {
                     GUI.backgroundColor = whiteKeyDisabledColor;
                 }
-                else GUI.backgroundColor = highlightNote == now ? whiteKeySelectedColor : whiteKeyColor;
+                else GUI.backgroundColor = highlightNote == now ? whiteKeySelectedColor : hovered ? whiteKeyHoverColor : whiteKeyColor;
 
                 //render key
-                bool b1 = GUI.Button(new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight - border), XM_Utilities.GetNoteString(now), XM_UIStyleManager.whitePianoKey);
-                int j = i % 7;
-                bool hasLeftBit = j == 3 || j == 0 || i == 0; bool hasRightBit = j == 2 || j == 6 || i == 69;
-                bool b2 = GUI.Button(new Rect(hasLeftBit ? x : x + blackKeyWidth * 0.5f, total.y, keyWidth - blackKeyWidth * ((hasLeftBit ? 0 : 0.5f) + (hasRightBit ? 0 : 0.5f)), blackKeyHeight), "", XM_UIStyleManager.whitePianoKey);
+                bool b1 = GUI.Button(r1, XM_Utilities.GetNoteString(now), XM_UIStyleManager.whitePianoKey);
+                bool b2 = GUI.Button(r2, "", XM_UIStyleManager.whitePianoKey);
                 if ((b1 || b2) && (now >= 21 && now <= 127)) keyPressed = now;
                 x += keyWidth;
             }
@@ -153,14 +165,18 @@ namespace XMusica.EditorUtilities {
                 }
                 int now = GetNoteOfBlackKey(i);
 
+                //test mouse hover
+                Rect r1 = new Rect(x, total.y, blackKeyWidth, blackKeyHeight);
+                bool hovered = r1.Contains(evt.mousePosition);
+
                 //determine key color
                 if (now < 21 || now > 127) {
                     GUI.backgroundColor = blackKeyDisabledColor;
                 }
-                else GUI.backgroundColor = highlightNote == now ? blackKeySelectedColor : blackKeyColor;
+                else GUI.backgroundColor = highlightNote == now ? blackKeySelectedColor : hovered ? blackKeyHoverColor : blackKeyColor;
 
                 //render key
-                bool b = GUI.Button(new Rect(x, total.y, blackKeyWidth, blackKeyHeight), "", XM_UIStyleManager.blackPianoKey);
+                bool b = GUI.Button(r1, "", XM_UIStyleManager.blackPianoKey);
                 if (b && (now >= 21 && now <= 127)) keyPressed = now;
                 x += keyWidth;
             }

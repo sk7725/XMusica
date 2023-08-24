@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   note: 57
-  note2: 125
+  note2: 88
 --- !u!4 &109328867
 Transform:
   m_ObjectHideFlags: 0
@@ -305,10 +305,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 55c52c4585b6f904a90d597797e8b234, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 1.122462
   Loop: 0
   Mute: 0
   Spatialize: 0

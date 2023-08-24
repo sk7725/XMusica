@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.0] - 2023-07-15
+### Changes
+- In-editor piano displays now detect mouse hover.
+
 ## [1.1.0] - 2023-07-15
 ### Changes
 - VInst editor windows now dock, preferring other VInst windows and then the scene view.
