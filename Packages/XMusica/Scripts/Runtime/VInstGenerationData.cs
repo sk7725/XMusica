@@ -30,8 +30,14 @@ namespace XMusica {
         public bool useEvenVelocitySpacings;
         public int velocitySamples;
 
+        //todo volume multiplier settings
+
         //round robin
         public int roundRobins;
+
+        public int GetNoteSampleAt(int index) {
+            return noteStartPos + index * noteSampleDist;
+        }
 
         public int GetVelocitySampleAt(int index) {
             return 127 - (velocitySamples - index - 1) * 127 / velocitySamples;

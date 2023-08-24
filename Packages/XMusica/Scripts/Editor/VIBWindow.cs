@@ -249,7 +249,7 @@ namespace XMusica.EditorUtilities {
 
             //generate scroll pane
             scrollPianoPos = GUI.BeginScrollView(scrollRect, scrollPianoPos, new Rect(0, 0, totalWidth, totalHeight), true, false);
-            Rect total = new Rect(border, border, keyWidth * 107, keyHeight);
+            Rect total = new Rect(border, border, keyWidth * 70, keyHeight);
 
             Color defColor = GUI.backgroundColor;
             GUI.backgroundColor = Color.black;

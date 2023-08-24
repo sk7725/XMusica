@@ -13,11 +13,13 @@ namespace XMusica.EditorUtilities {
         static readonly GUIContent k_selectAsset = new GUIContent("Select Asset");
         #endregion
 
-        [SerializeField]
-        private VirtualInstrumentBinding selected;
+        [SerializeField] private VirtualInstrumentBinding selected;
+        [SerializeField] private int s_notes, s_vel, s_rr;
         [SerializeField] private Vector2 scrollWindowPos, scrollMatrixPos;
 
-        private static float fieldMaxWidth = 400, buttonWidth = 140;
+        private static float fieldMaxWidth = 400, buttonWidth = 140, border = 3;
+        private static float lineHeight = EditorGUIUtility.singleLineHeight, lineWidth = 300, cellBorder = 2;
+        private static float noteLabelWidth = 120, velocityLabelHeight = 50;
 
         #region Base
         [MenuItem("XMusica/Virtual Instrument Sample Assigner", priority = 1)]
@@ -37,9 +39,8 @@ namespace XMusica.EditorUtilities {
 
         private void Refresh() {
             if (Selection.activeObject is VirtualInstrumentBinding vb) {
-                if (selected != vb) {
-                    selected = vb;
-                }
+                selected = vb;
+                vb.GetSampleDimensions(out s_notes, out s_vel, out s_rr);
             }
             else {
                 selected = null;
@@ -81,19 +82,68 @@ namespace XMusica.EditorUtilities {
             GUILayout.Space(10);
 
             GUILayout.Label(t_samples, EditorStyles.boldLabel, GUILayout.Height(30));
-            EditorGUI.BeginChangeCheck();
 
-            DrawSampleMatrix();
+            bool changed = DrawSampleMatrix();
 
-            if (EditorGUI.EndChangeCheck()) {
+            if (changed) {
                 Debug.Log("uwu");
                 SaveAsset();
             }
         }
         #endregion
 
-        private void DrawSampleMatrix() {
+        private bool DrawSampleMatrix() {
+            float totalWidth = GetMatrixWidth() + border * 2;
+            float totalHeight = GetMatrixHeight() + border * 2;
+
+            Rect scrollRect = EditorGUILayout.GetControlRect(true,totalHeight + 18); //+18 accounts for scroll bar
+            scrollMatrixPos = GUI.BeginScrollView(scrollRect, scrollMatrixPos, new Rect(0, 0, totalWidth, totalHeight), false, false);
+            Rect total = new Rect(border, border, totalWidth - border, totalHeight - border);
+
+            Color defColor = GUI.backgroundColor;
+            GUI.backgroundColor = Color.black;
+            GUI.Box(total, "");
+            GUI.backgroundColor = defColor;
+
+            EditorGUI.BeginChangeCheck();
+
+            //draw cells
+            float cw = GetSingleCellWidth();
+            float ch = GetSingleCellHeight();
+
+            float x = total.x + noteLabelWidth;
+            float y = total.y + velocityLabelHeight;
+            for (int i = 0; i < s_notes; i++) {
+                for (int j = 0; j < s_vel; j++) {
+                    Rect r = new Rect(x + cellBorder, y + cellBorder, cw - cellBorder, ch - cellBorder);
+                    Color c = XM_EditorUtilities.GetDiagramColor(s_notes, i, 0.5f, i % 2 == 0 ? 0.6f : 0.8f);
+                    DrawCell(r, i, j, c);
+                    x += cw;
+                }
+                x = total.x + noteLabelWidth;
+                y += ch;
+            }
+
+            //draw title cells
             //todo
+
+            GUI.backgroundColor = defColor;
+            bool ret = EditorGUI.EndChangeCheck();
+            GUI.EndScrollView(true);
+
+            return ret;
+        }
+
+        private void DrawCell(Rect rect, int i, int j, Color color) {
+            GUI.backgroundColor = color;
+            GUI.Box(rect, "");
+            GUI.Label(TopRect(rect, lineHeight), $"{XM_Utilities.GetNoteString(selected.Samples[i][j][0].sampleNote)}, v{selected.Samples[i][j][0].sampleVelocity}");
+
+            float y = rect.y + lineHeight;
+            for (int k = 0; k < s_rr; k++) {
+                selected.Samples[i][j][0].clip = (AudioClip)EditorGUI.ObjectField(new Rect(rect.x, y, rect.width, lineHeight), selected.Samples[i][j][k].clip, typeof(AudioClip), false);
+                y += lineHeight;
+            }
         }
 
         private void SaveAsset() {
@@ -103,11 +153,35 @@ namespace XMusica.EditorUtilities {
         }
 
         private float GetMatrixWidth() {
-            return 700;//todo
+            return GetSingleCellWidth() * s_vel + noteLabelWidth;
         }
 
         private float GetMatrixHeight() {
-            return 400;//todo
+            return GetSingleCellHeight() * s_notes + velocityLabelHeight;
+        }
+
+        private float GetSingleCellHeight() {
+            return (1 + s_rr) * lineHeight + cellBorder * 2 + 5;
+        }
+
+        private float GetSingleCellWidth() {
+            return lineWidth + cellBorder * 2;
+        }
+
+        private Rect LeftRect(Rect rect, float a) {
+            return new Rect(rect.x, rect.y, a, rect.height);
+        }
+
+        private Rect RightRect(Rect rect, float a) {
+            return new Rect(rect.x + rect.width - a, rect.y, a, rect.height);
+        }
+
+        private Rect TopRect(Rect rect, float a) {
+            return new Rect(rect.x, rect.y, rect.width, a);
+        }
+
+        private Rect BottomRect(Rect rect, float a) {
+            return new Rect(rect.x, rect.y + rect.height - a, rect.width, a);
         }
     }
 }

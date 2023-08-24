@@ -163,12 +163,24 @@ namespace XMusica {
             if (samples.Length > 0 && oldSamples.Length > 0) {
                 GetSampleDimensionsInternal(oldSamples, out int nn, out int mm, out int rr);
                 GetSampleDimensionsInternal(samples, out int ni, out int mi, out int ri);
-                int n = Mathf.Min(nn, ni); int m = Mathf.Min(mm, mi); int r = Mathf.Min(rr, ri);
-                for (int i = 0; i < n; i++) {
-                    for (int j = 0; j < m; j++) {
-                        for (int k = 0; k < r; k++) {
+                int nz = Mathf.Min(nn, ni); int mz = Mathf.Min(mm, mi); int rz = Mathf.Min(rr, ri);
+                for (int i = 0; i < nz; i++) {
+                    for (int j = 0; j < mz; j++) {
+                        for (int k = 0; k < rz; k++) {
                             samples[i][j][k] = oldSamples[i][j][k];
                         }
+                    }
+                }
+            }
+
+            //fill in sample metadata
+            GetSampleDimensionsInternal(samples, out int n, out int m, out int r);
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    for (int k = 0; k < r; k++) {
+                        samples[i][j][k].sampleNote = data.GetNoteSampleAt(i);
+                        samples[i][j][k].sampleVelocity = data.GetVelocitySampleAt(j);
+                        samples[i][j][k].volumeMultiplier = 1f; //todo
                     }
                 }
             }
