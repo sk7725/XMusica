@@ -5,6 +5,7 @@
   "description": "A C# port of a sfz-like virtual instrument binder. Create virtual instruments with just a few samples!",
   "unity": "2021.3",
   "dependencies": {},
+  "documentationUrl": "https://quasar-quality-5dc.notion.site/49ee9bc19d4c403ba1b177ce2005a14f?v=099ba556718c46028c57599626465669&pvs=4",
   "keywords": [
     "midi",
     "music",
