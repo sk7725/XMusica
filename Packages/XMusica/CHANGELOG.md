@@ -3,6 +3,7 @@
 ## [1.3.0] - 2023-08-25
 ### Additions
 - Added volume multiplier in generation settings
+- Added fill column button in sample assigner
 ### Changes
 - Virtual Instrument tester window can now test velocities
 - Corrected wrong timestamps in changelog (yes, this one)
