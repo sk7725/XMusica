@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -23,6 +24,10 @@ namespace XMusica.EditorUtilities {
         static readonly GUIContent k_estimatedNoteSamples = new GUIContent("Note Samples", "The estimated number of note samples needed.");
 
         static readonly GUIContent k_velocitySamples = new GUIContent("Velocity Samples", "Number of velocity samples.");
+        static readonly GUIContent k_selectedVelocity = new GUIContent("Selected Velocity");
+        static readonly GUIContent k_volumeMultiplier = new GUIContent("Volume Multiplier", "Volume multiplier for current velocity sample.");
+        static readonly GUIContent k_normalizeVolume = new GUIContent("Normalize", "Normalize velocity sample. Select this option if your samples with smaller velocities are quiet. (As quiet as the stated velocity, that is)");
+        static readonly GUIContent k_fullVolume = new GUIContent("Full", "Full velocity sample. Select this option if your samples with smaller velocities are as loud as the bigger ones.");
         static readonly GUIContent k_roundRobins = new GUIContent("Round Robins", "Round robin refers to multiple samples of the same note and velocity. This is used to give the virtual instrument more depth.");
         static readonly GUIContent k_estimatedTotalSamples = new GUIContent("Total Samples", "The estimated number of total samples needed.");
 
@@ -44,6 +49,8 @@ namespace XMusica.EditorUtilities {
 
         [SerializeField]
         private VInstGenerationData generationData;
+        [SerializeField]
+        private int currentEditingVelocity = 0;
         [SerializeField]
         private bool isDirty = false;
 
@@ -87,7 +94,7 @@ namespace XMusica.EditorUtilities {
 
         private void Refresh() {
             if (isDirty && selected != null && (!(Selection.activeObject is VirtualInstrumentBinding b) || b != selected)) {
-                //todo warn save popup
+                //warn save popup
                 lastGenerationData = generationData;
                 lastSelected = selected;
 
@@ -109,7 +116,9 @@ namespace XMusica.EditorUtilities {
                 if (selected != vb) {
                     selected = vb;
                     generationData = vb.generationData;
+                    currentEditingVelocity = 0;
                     isDirty = false;
+                    ValidateVMultipliers();
                 }
             }
             else {
@@ -403,6 +412,35 @@ namespace XMusica.EditorUtilities {
         #region VelocityGUI
         private void VelGenerationSettings() {
             generationData.velocitySamples = IntField(k_velocitySamples, generationData.velocitySamples, true);
+            ValidateVMultipliers();
+
+            //select velocity
+            string[] options = new string[generationData.velocitySamples];
+            for (int i = 0; i < generationData.velocitySamples; i++) {
+                int v1 = i == 0 ? 0 : generationData.GetVelocitySampleAt(i - 1);
+                int v2 = generationData.GetVelocitySampleAt(i);
+                options[i] = $"#{i} ({v1} ~ {v2})";
+            }
+            currentEditingVelocity = EditorGUILayout.Popup(k_selectedVelocity, currentEditingVelocity, options, GUILayout.MaxWidth(fieldMaxWidth));
+
+            EditorGUI.indentLevel++;
+            //volume multiplier
+            int v = generationData.GetVelocitySampleAt(currentEditingVelocity);
+            EditorGUI.BeginDisabledGroup(v == 0);
+            generationData.volumeMultipliers[currentEditingVelocity] = Slider(k_volumeMultiplier, generationData.volumeMultipliers[currentEditingVelocity], 0, v == 0 ? 1 : (127f / v));
+            EditorGUILayout.BeginHorizontal(GUILayout.MaxWidth(fieldMaxWidth));
+            GUILayout.Box("", GUILayout.Width(10));
+            if (GUILayout.Button(k_normalizeVolume)) {
+                generationData.volumeMultipliers[currentEditingVelocity] = 127f / v;
+                changed = true;
+            }
+            if (GUILayout.Button(k_fullVolume)) {
+                generationData.volumeMultipliers[currentEditingVelocity] = 1f;
+                changed = true;
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUI.EndDisabledGroup();
+            EditorGUI.indentLevel--;
 
             GUILayout.Space(5);
             VelocityPreview();
@@ -413,6 +451,27 @@ namespace XMusica.EditorUtilities {
                 changed = true;
                 GUI.FocusControl("");
             }
+        }
+
+        private void ValidateVMultipliers() {
+            if (generationData.volumeMultipliers == null || generationData.volumeMultipliers.Length != generationData.velocitySamples) {
+                var prev = generationData.volumeMultipliers;
+                generationData.volumeMultipliers = new float[generationData.velocitySamples];
+                Array.Fill(generationData.volumeMultipliers, 1f);
+
+                //copy over previous generationData
+                if(prev != null) {
+                    int n = Mathf.Min(prev.Length, generationData.volumeMultipliers.Length);
+                    for(int i = 0; i < n; i++) {
+                        int v = generationData.GetVelocitySampleAt(i);
+                        float max = v == 0 ? 1 : (127f / v);
+                        generationData.volumeMultipliers[generationData.volumeMultipliers.Length - i - 1] = Mathf.Min(prev[prev.Length - i - 1], max);
+                    }
+                }
+                isDirty = true;
+                Debug.Log("Regenerating volume multiplier array...");
+            }
+            currentEditingVelocity = Mathf.Clamp(currentEditingVelocity, 0, generationData.velocitySamples - 1);
         }
 
         Rect graphicRect;
@@ -446,6 +505,14 @@ namespace XMusica.EditorUtilities {
                 float f = generationData.GetVelocitySampleAt(i) / 127f;
                 Handles.color = XM_EditorUtilities.GetDiagramColor(size, i);
                 Handles.DrawLine(GPos(f, 0), GPos(f, 1));
+            }
+
+            //draw volume multiplier line
+            for (int i = 0; i < size; i++) {
+                float f = generationData.GetVelocitySampleAt(i) / 127f;
+                float f2 = i == 0 ? 0 : generationData.GetVelocitySampleAt(i - 1) / 127f;
+                Handles.color = XM_EditorUtilities.GetDiagramColor(size, i);
+                Handles.DrawLine(GPos(f, 1 - f * generationData.volumeMultipliers[i]), GPos(f2, 1 - f2 * generationData.volumeMultipliers[i]));
             }
         }
 
@@ -528,6 +595,7 @@ namespace XMusica.EditorUtilities {
 
         public override void SaveChanges() {
             if (selected != null) {
+                ValidateVMultipliers();
                 selected.ApplyGeneration(generationData);
 
                 Debug.Log("Generated sample bindings!");
@@ -552,6 +620,12 @@ namespace XMusica.EditorUtilities {
             int value = EditorGUILayout.IntField(content, defValue, GUILayout.MaxWidth(fieldMaxWidth));
             if (onlyPositive && value <= 0) value = 1;
             if(value != defValue) changed = true;
+            return value;
+        }
+
+        private float Slider(GUIContent content, float defValue, float min, float max) {
+            float value = EditorGUILayout.Slider(content, defValue, min, max, GUILayout.MaxWidth(fieldMaxWidth));
+            if (value != defValue) changed = true;
             return value;
         }
 

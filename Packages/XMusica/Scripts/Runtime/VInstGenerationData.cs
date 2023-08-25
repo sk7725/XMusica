@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,8 +16,12 @@ namespace XMusica {
             this.noteStartPos = noteStartPos;
             this.noteEndCutoff = noteEndCutoff;
             this.noteSampleDist = noteSampleDist;
+
             useEvenVelocitySpacings = true;
             this.velocitySamples = velocitySamples;
+            volumeMultipliers = new float[velocitySamples];
+            Array.Fill(volumeMultipliers, 1f);
+
             this.roundRobins = roundRobins;
         }
 
@@ -30,7 +35,8 @@ namespace XMusica {
         public bool useEvenVelocitySpacings;
         public int velocitySamples;
 
-        //todo volume multiplier settings
+        //volume multiplier settings
+        public float[] volumeMultipliers;
 
         //round robin
         public int roundRobins;

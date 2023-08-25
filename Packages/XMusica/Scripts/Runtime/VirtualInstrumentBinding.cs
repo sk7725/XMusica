@@ -166,7 +166,7 @@ namespace XMusica {
                 for (int i = 0; i < nz; i++) {
                     for (int j = 0; j < mz; j++) {
                         for (int k = 0; k < rz; k++) {
-                            samples[i][j][k] = oldSamples[i][j][k];
+                            samples[i][samples[0].Length - j - 1][k] = oldSamples[i][oldSamples[0].Length - j - 1][k];
                         }
                     }
                 }
@@ -179,7 +179,7 @@ namespace XMusica {
                     for (int k = 0; k < r; k++) {
                         samples[i][j][k].sampleNote = data.GetNoteSampleAt(i);
                         samples[i][j][k].sampleVelocity = data.GetVelocitySampleAt(j);
-                        samples[i][j][k].volumeMultiplier = 1f; //todo volume multiplier
+                        samples[i][j][k].volumeMultiplier = data.volumeMultipliers[j];
                     }
                 }
             }

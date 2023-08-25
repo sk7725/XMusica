@@ -21,6 +21,8 @@ MonoBehaviour:
     noteSampleDist: 6
     useEvenVelocitySpacings: 1
     velocitySamples: 1
+    volumeMultipliers:
+    - 1
     roundRobins: 2
   serialized_samples:
   - clip: {fileID: 8300000, guid: b9c6c167c189d4b4bbf231e22469a88a, type: 3}

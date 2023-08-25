@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -13,15 +14,17 @@ namespace XMusica.EditorUtilities {
         static readonly GUIContent k_selectAsset = new GUIContent("Select Asset");
         static readonly GUIContent k_notes = new GUIContent("Notes");
         static readonly GUIContent k_velocities = new GUIContent("Velocities");
+        static readonly GUIContent k_fillWith = new GUIContent("Fill Column...", "Fill the column automatically with a given directory. Select a folder with named audio clips to fill the column with.");
         #endregion
 
         [SerializeField] private VirtualInstrumentBinding selected;
         [SerializeField] private int s_notes, s_vel, s_rr;
         [SerializeField] private Vector2 scrollWindowPos, scrollMatrixPos;
+        [SerializeField] private string lastFolderBrowsed = "Assets";
 
         private static float buttonWidth = 140, border = 3;
         private static float lineHeight = EditorGUIUtility.singleLineHeight, lineWidth = 300, cellBorder = 2;
-        private static float noteLabelWidth = 120, velocityLabelHeight = 50;
+        private static float noteLabelWidth = 120, velocityLabelHeight = 50 + lineHeight;
 
         #region Base
         [MenuItem("XMusica/Virtual Instrument Sample Assigner", priority = 1)]
@@ -125,6 +128,8 @@ namespace XMusica.EditorUtilities {
                 y += ch;
             }
 
+            bool ret = EditorGUI.EndChangeCheck();
+
             //draw note title cells
             y = total.y + velocityLabelHeight + 2;
             for(int i = 0; i < s_notes; i++) {
@@ -138,10 +143,17 @@ namespace XMusica.EditorUtilities {
             //draw velocity title cells
             x = total.x + noteLabelWidth + 2;
             for (int j = 0; j < s_vel; j++) {
-                Rect r = new Rect(x, total.y, cw, velocityLabelHeight);
+                Rect r = new Rect(x, total.y, cw, velocityLabelHeight - lineHeight);
                 GUI.backgroundColor = XM_EditorUtilities.GetDiagramColor(s_vel, j, 0.8f, 0.3f);
                 XM_UIStyleManager.matrixTitle.normal.textColor = XM_UIStyleManager.matrixTitle.hover.textColor = XM_EditorUtilities.GetDiagramColor(s_vel, j, 0.2f);
                 GUI.Box(r, $"Velocity {selected.Samples[0][j][0].sampleVelocity} (#{j})", XM_UIStyleManager.matrixTitle);
+                GUI.backgroundColor = defColor;
+                if(GUI.Button(new Rect(r.x, r.y + r.height, r.width, lineHeight), k_fillWith)) {
+                    //get folder
+                    string dir = EditorUtility.OpenFolderPanel("Select folder to fill the column with...", lastFolderBrowsed, "");
+                    bool ret2 = FillColumnWithSamples(j, dir);
+                    ret = ret || ret2;
+                }
                 x += cw;
             }
 
@@ -150,7 +162,6 @@ namespace XMusica.EditorUtilities {
             //draw legend
             DrawLegend(new Rect(total.x, total.y, noteLabelWidth, velocityLabelHeight));
 
-            bool ret = EditorGUI.EndChangeCheck();
             GUI.EndScrollView(true);
 
             return ret;
@@ -182,6 +193,50 @@ namespace XMusica.EditorUtilities {
             EditorUtility.SetDirty(selected);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        private bool FillColumnWithSamples(int column, string dir) {
+            if (string.IsNullOrEmpty(dir)) {
+                return false;
+            }
+            Debug.Log(dir);
+            if (dir.StartsWith(Application.dataPath)) {
+                dir = "Assets" + dir.Substring(Application.dataPath.Length);
+            }
+            else {
+                Debug.LogError("Select a folder inside the assets directory!");
+                return false;
+            }
+            lastFolderBrowsed = dir;
+
+            string[] paths = AssetDatabase.FindAssets("t:AudioClip", new string[] { dir });
+            if (paths.Length == 0) {
+                Debug.LogError("Cannot find audio clips in selected folder or its subfolders!");
+                return false;
+            }
+            Debug.Log($"Found {paths.Length} Samples!");
+
+            string[] itemNames = new string[paths.Length];
+            for (int i = 0; i < paths.Length; i++) {
+                paths[i] = AssetDatabase.GUIDToAssetPath(paths[i]);
+                itemNames[i] = paths[i].Substring(paths[i].LastIndexOf('/') + 1);
+            }
+
+            Array.Sort(itemNames);
+            //now for the fun part
+            for (int i = 0; i < s_notes; i++) {
+                string targetName = XM_Utilities.GetNoteString(selected.Samples[i][0][0].sampleNote);
+                int r = 0;
+                for (int j = 0; j < itemNames.Length; j++) {
+                    if (r >= s_rr) break; //found enough samples
+                    if (itemNames[j].Contains(targetName)) {
+                        selected.Samples[i][column][r].clip = (AudioClip)AssetDatabase.LoadAssetAtPath(paths[j], typeof(AudioClip));
+                        r++;
+                    }
+                }
+            }
+
+            return true;
         }
 
         private float GetMatrixWidth() {

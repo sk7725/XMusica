@@ -104,16 +104,16 @@ namespace XMusica.EditorUtilities {
             }
             GUILayout.Space(5);
 
-            int pressed = NotePreview(lastPressed);
+            int pressed = NotePreview(lastPressed, out float fvel);
 
             if(pressed != -1) {
-                HandleNotePressed(pressed);
+                HandleNotePressed(pressed, Mathf.CeilToInt(fvel * 127));
             }
         }
         #endregion
 
         #region PianoGUI
-        private int NotePreview(int highlightNote) {
+        private int NotePreview(int highlightNote, out float fvelocity) {
             Event evt = Event.current;
             Rect scrollRect = EditorGUILayout.GetControlRect(true, keyHeight + border * 2 + 18);
             float totalWidth = keyWidth * 70 + border * 2;
@@ -129,6 +129,7 @@ namespace XMusica.EditorUtilities {
             GUI.backgroundColor = defColor;
 
             int keyPressed = -1;
+            fvelocity = 1f;
 
             //white keys
             float x = total.x;
@@ -151,7 +152,10 @@ namespace XMusica.EditorUtilities {
                 //render key
                 bool b1 = GUI.Button(r1, XM_Utilities.GetNoteString(now), XM_UIStyleManager.whitePianoKey);
                 bool b2 = GUI.Button(r2, "", XM_UIStyleManager.whitePianoKey);
-                if ((b1 || b2) && (now >= 21 && now <= 127)) keyPressed = now;
+                if ((b1 || b2) && (now >= 21 && now <= 127)) {
+                    keyPressed = now;
+                    fvelocity = (evt.mousePosition.y - total.y) / keyHeight;
+                }
                 x += keyWidth;
             }
 
@@ -177,7 +181,10 @@ namespace XMusica.EditorUtilities {
 
                 //render key
                 bool b = GUI.Button(r1, "", XM_UIStyleManager.blackPianoKey);
-                if (b && (now >= 21 && now <= 127)) keyPressed = now;
+                if (b && (now >= 21 && now <= 127)) {
+                    keyPressed = now;
+                    fvelocity = (evt.mousePosition.y - total.y) / blackKeyHeight;
+                }
                 x += keyWidth;
             }
 
@@ -197,14 +204,14 @@ namespace XMusica.EditorUtilities {
         }
         #endregion
 
-        private void HandleNotePressed(int note) {
+        private void HandleNotePressed(int note, int velocity) {
             lastPressed = note;
-            var sd = selected.GetSample(note, 127, out float volume, out float pitch);
+            var sd = selected.GetSample(note, velocity, out float volume, out float pitch);
             if(sd.clip == null) {
                 lastPlayedSample = "No clip assigned";
                 return;
             }
-            lastPlayedSample = AssetDatabase.GetAssetPath(sd.clip);
+            lastPlayedSample = $"{AssetDatabase.GetAssetPath(sd.clip)} pitch offset: {pitch} volume: {volume}";
             if(source != null) {
                 source.clip = sd.clip;
                 source.volume = volume;

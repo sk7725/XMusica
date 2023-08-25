@@ -1,0 +1,271 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae412a60033f3045abe3df99af73e02, type: 3}
+  m_Name: Piano Multi Velocity
+  m_EditorClassIdentifier: 
+  boundNote: 0000000000000000000000000000000000000000000000000100000001000000010000000100000001000000010000000200000002000000020000000200000002000000020000000300000003000000030000000300000003000000030000000400000004000000040000000400000004000000040000000500000005000000050000000500000005000000050000000600000006000000060000000600000006000000060000000700000007000000070000000700000007000000070000000800000008000000080000000800000008000000080000000900000009000000090000000900000009000000090000000a0000000a0000000a0000000a0000000a0000000a0000000b0000000b0000000b0000000b0000000b0000000b0000000c0000000c0000000c0000000c0000000c0000000c0000000d0000000d0000000d0000000d0000000d0000000d0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e0000000e000000
+  boundVelocity: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  generationData:
+    useEvenNoteSpacings: 1
+    noteStartPos: 23
+    noteEndCutoff: 108
+    noteSampleDist: 6
+    useEvenVelocitySpacings: 1
+    velocitySamples: 2
+    volumeMultipliers:
+    - 1.984375
+    - 0.6
+    roundRobins: 2
+  serialized_samples:
+  - clip: {fileID: 8300000, guid: 1bb9ee0eb65a44f4bba544cf5413bd92, type: 3}
+    sampleNote: 23
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 17f2fedebde4b9c4aae1b79d550ab8e8, type: 3}
+    sampleNote: 23
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: b9c6c167c189d4b4bbf231e22469a88a, type: 3}
+    sampleNote: 23
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 00992d60127cdc940b9519929a56079f, type: 3}
+    sampleNote: 23
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 4e99bda8245216141b31e4bcb2c904dc, type: 3}
+    sampleNote: 29
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 6b7acc3117ae33f40b5a65e02a514a57, type: 3}
+    sampleNote: 29
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: adf23c8dcc990ba41a93a6aa651bc524, type: 3}
+    sampleNote: 29
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 81523b83798c534459327b0755817cae, type: 3}
+    sampleNote: 29
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 6750d3b9433f8c048beb57e1ff745785, type: 3}
+    sampleNote: 35
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: ed49530fde6a50f4f90a9900201d85f7, type: 3}
+    sampleNote: 35
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: e429a608136949c47886e62c1c9be04b, type: 3}
+    sampleNote: 35
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: aa40b3671a7ef9948a1408b12fddc0c4, type: 3}
+    sampleNote: 35
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: b3019e97181de1242bb4fccf899114ea, type: 3}
+    sampleNote: 41
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 1c613174ee9ae044a9113fec594463f1, type: 3}
+    sampleNote: 41
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: b84939bd5bc158b42b9ef424a01dce64, type: 3}
+    sampleNote: 41
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 79374807520d56b4c85e3b0ffa292794, type: 3}
+    sampleNote: 41
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 2a6a014c1d7f61943b3d88af8bced382, type: 3}
+    sampleNote: 47
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 0b07859b1335d3f4791c3b2b1abb8049, type: 3}
+    sampleNote: 47
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: c7fdb20c50c638d40a073b83aaa8a3f6, type: 3}
+    sampleNote: 47
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: ff864dd58ee000245ad8339731b2be6b, type: 3}
+    sampleNote: 47
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 387c1d7eeaba4794a89fa1027df3c86e, type: 3}
+    sampleNote: 53
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 0ed64988934e18348b537e1182270a73, type: 3}
+    sampleNote: 53
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 5f4ee546f7da3774b8b54c1032aab135, type: 3}
+    sampleNote: 53
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 55c52c4585b6f904a90d597797e8b234, type: 3}
+    sampleNote: 53
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 130bf3d81b7dc614ba00283f7f1d9817, type: 3}
+    sampleNote: 59
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: aff97b5b71354d54ab5669d307e02e69, type: 3}
+    sampleNote: 59
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 042d78fab50769a44b428af5fc9dc272, type: 3}
+    sampleNote: 59
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: f333ca33d6e252f43a325f6fff824cf0, type: 3}
+    sampleNote: 59
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: e69c064ff30489e4096493d5a801cf70, type: 3}
+    sampleNote: 65
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 2822e5003074c5f4b804583a0792e362, type: 3}
+    sampleNote: 65
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: a54c4a209f3e7c944a162f8194d2c14c, type: 3}
+    sampleNote: 65
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: d0a7e4a1c758c08419848b45fc71bce2, type: 3}
+    sampleNote: 65
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: ad9b579e8154db246a81c7f03a19d374, type: 3}
+    sampleNote: 71
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: f48438bbf0047bb49bd34e772148d617, type: 3}
+    sampleNote: 71
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: ab682010add2fa14cb5c557a65113c04, type: 3}
+    sampleNote: 71
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: f2e46afea85871842a2a021e1a4cf95e, type: 3}
+    sampleNote: 71
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: a6202df7611782549bb6567c5393da6b, type: 3}
+    sampleNote: 77
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 4960abe5c1f8df747a2596a8252e98b3, type: 3}
+    sampleNote: 77
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: bccb116c2e5c427479d11df463a551b9, type: 3}
+    sampleNote: 77
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: e9455997d4292874dbe31951878d0a37, type: 3}
+    sampleNote: 77
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 30b24e568eea647458f9b85279ce2420, type: 3}
+    sampleNote: 83
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: d190d1ec26db1a346b2081526ae53ad7, type: 3}
+    sampleNote: 83
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 7c681e62b3ba2dc4e84df8125af57a80, type: 3}
+    sampleNote: 83
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 35a1044885c71e348ac020b26fb7d840, type: 3}
+    sampleNote: 83
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: f685c2ba98c542645bf172337c9f6fd4, type: 3}
+    sampleNote: 89
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: a76db00935732a447a2e6649aaa175ae, type: 3}
+    sampleNote: 89
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 107489e5cf105e8408967810b87a692b, type: 3}
+    sampleNote: 89
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 0a38d591c2c336a448c530a248e71220, type: 3}
+    sampleNote: 89
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 8cc9d0edb451e4141a16870334f92668, type: 3}
+    sampleNote: 95
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: f120db2d0fb64d141a30dc3199d0507e, type: 3}
+    sampleNote: 95
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: ca6a679770f9ae448b819764ef6e36f8, type: 3}
+    sampleNote: 95
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: 19425f444f40bff44bcdb354642dcb2e, type: 3}
+    sampleNote: 95
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: be24b394221b74a47bd12d53da2fc8cb, type: 3}
+    sampleNote: 101
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: b16ebe7cedf17e14d907ce2f34f1782f, type: 3}
+    sampleNote: 101
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: 4fa7f099a9919c04fadb645d02adaeb9, type: 3}
+    sampleNote: 101
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: fbf4cfb31c258ca4a96776861f3452f6, type: 3}
+    sampleNote: 101
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: e4c2f794ca3d0c74e95f50f4fa9c1af9, type: 3}
+    sampleNote: 107
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: b50a7e13bc458ee46a1a1d78c60ffac6, type: 3}
+    sampleNote: 107
+    sampleVelocity: 64
+    volumeMultiplier: 1.984375
+  - clip: {fileID: 8300000, guid: f8cde595bf737064c9379b2dec83d8ce, type: 3}
+    sampleNote: 107
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  - clip: {fileID: 8300000, guid: a0faa01e273833a4e84c788bf2ef0381, type: 3}
+    sampleNote: 107
+    sampleVelocity: 127
+    volumeMultiplier: 0.6
+  samples_dim_0: 15
+  samples_dim_1: 2
+  samples_dim_2: 2
