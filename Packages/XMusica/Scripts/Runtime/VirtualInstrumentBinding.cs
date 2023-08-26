@@ -29,7 +29,7 @@ namespace XMusica {
             public float volumeMultiplier; //same here; it must be <=1
         }
 
-        private void GetBindInput(int note, int velocity, out int boundNote, out int boundVelocity) {
+        public void GetBindInput(int note, int velocity, out int boundNote, out int boundVelocity) {
             boundNote = this.boundNote[note - MIN_NOTE];
             boundVelocity = this.boundVelocity[velocity];
         }
