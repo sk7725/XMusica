@@ -132,7 +132,7 @@ namespace XMusica {
             generationData = data;
 
             if (samples == null) samples = new SampleData[0][][];
-            int noteSamples = data.useEvenNoteSpacings ? XM_Utilities.GetNoteSamplesRequired(data) : Mathf.Max(1, samples.Length);
+            int noteSamples = data.useEvenNoteSpacings ? data.NoteSamples : Mathf.Max(1, samples.Length);
             int velocitySamples = data.useEvenVelocitySpacings ? data.velocitySamples : Mathf.Max(1, samples.GetLength(1));
             int rrSamples = data.roundRobins;
 

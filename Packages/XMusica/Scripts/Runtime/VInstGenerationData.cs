@@ -48,5 +48,18 @@ namespace XMusica {
         public int GetVelocitySampleAt(int index) {
             return 127 - (velocitySamples - index - 1) * 127 / velocitySamples;
         }
+
+        public int NoteSamples {
+            get {
+                if (noteEndCutoff < noteStartPos) return 0;
+                return (Mathf.Min(127, noteEndCutoff) - noteStartPos) / noteSampleDist + 1;
+            }
+        }
+
+        public int TotalSamples {
+            get {
+                return NoteSamples * velocitySamples * roundRobins;
+            }
+        }
     }
 }

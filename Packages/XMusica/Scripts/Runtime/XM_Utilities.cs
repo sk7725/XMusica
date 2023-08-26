@@ -15,6 +15,10 @@ namespace XMusica {
             return note / 12 - 1;
         }
 
+        /// <summary>
+        /// Gets a formal note string from a note integer.
+        /// </summary>
+        /// <param name="note">The note number as a midi note integer. (21-127; A0-G9)</param>
         public static string GetNoteString(int note) {
             if (note < 21 || note > 127) return note.ToString();
             int n = note / 12 - 1;
@@ -28,6 +32,10 @@ namespace XMusica {
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Parses a MIDI note integer from a formal note string.
+        /// </summary>
+        /// <param name="note">The formal note string. (e.g. "A#0")</param>
         public static int FromNoteString(string note) {
             if (note.Length < 2 || note.Length > 3) return -1;
             //parse octave
@@ -72,12 +80,9 @@ namespace XMusica {
             return n + offset + (oct + 1) * 12;
         }
 
-        public static int GetNoteSamplesRequired(VInstGenerationData data) {
-            if (data.noteEndCutoff < data.noteStartPos) return 0;
-            return (Mathf.Min(127, data.noteEndCutoff) - data.noteStartPos) / data.noteSampleDist + 1;
-        }
-
-        //returns whether the given note is a sample holding note. index if the given note holds a sample. -1 otherwise.
+        /// <summary>
+        /// returns whether the given note is a sample holding note. index if the given note holds a sample. -1 otherwise.
+        /// </summary>
         public static int GetEstimatedSampleNoteIndex(int note, VInstGenerationData data) {
             int j = note - data.noteStartPos;
             if (j < 0 || note > data.noteEndCutoff) return -1;
@@ -85,9 +90,11 @@ namespace XMusica {
             return -1;
         }
 
-        //returns the closest sample holding note's sample index.
+        /// <summary>
+        /// returns the closest sample holding note's sample index. index if the given note is associated with a sample. -1 otherwise.
+        /// </summary>
         public static int GetEstimatedReferenceNoteIndex(int note, VInstGenerationData data) {
-            int size = GetNoteSamplesRequired(data);
+            int size = data.NoteSamples;
             if (size == 0) return -1;
             int j = note - data.noteStartPos;
             int index = j / data.noteSampleDist;

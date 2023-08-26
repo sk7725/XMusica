@@ -214,7 +214,7 @@ namespace XMusica.EditorUtilities {
             generationData.noteSampleDist = IntField(k_sampleSpace, generationData.noteSampleDist, true);
 
             GUILayout.Space(5);
-            int noteSamples = XM_Utilities.GetNoteSamplesRequired(generationData);
+            int noteSamples = generationData.NoteSamples;
             i_estimatedNoteSamplesContent.text = noteSamples.ToString();
             EditorGUILayout.LabelField(k_estimatedNoteSamples, i_estimatedNoteSamplesContent, GUILayout.Width(fieldMaxWidth));
 
@@ -287,7 +287,7 @@ namespace XMusica.EditorUtilities {
             GUI.backgroundColor = defColor;
 
             int keyPressed = -1;
-            int size = XM_Utilities.GetNoteSamplesRequired(generationData);
+            int size = generationData.NoteSamples;
 
             //white keys
             float x = total.x;
@@ -378,7 +378,7 @@ namespace XMusica.EditorUtilities {
 
         private string GetNoteSamplesGuide() {
             StringBuilder sb = new("Samples: ");
-            int size = XM_Utilities.GetNoteSamplesRequired(generationData);
+            int size = generationData.NoteSamples;
             for(int i = 0; i < size; i++) {
                 sb.Append(XM_Utilities.GetNoteString(generationData.noteStartPos + i * generationData.noteSampleDist));
                 if(i < size - 1) sb.Append(',');
@@ -554,13 +554,9 @@ namespace XMusica.EditorUtilities {
 
             if (generationData.useEvenNoteSpacings && generationData.useEvenVelocitySpacings) {
                 GUILayout.Space(5);
-                i_estimatedTotalSamplesContent.text = GetTotalSamplesRequired(generationData).ToString();
+                i_estimatedTotalSamplesContent.text = generationData.TotalSamples.ToString();
                 EditorGUILayout.LabelField(k_estimatedTotalSamples, i_estimatedTotalSamplesContent, GUILayout.Width(fieldMaxWidth));
             }
-        }
-
-        private int GetTotalSamplesRequired(VInstGenerationData data) {
-            return XM_Utilities.GetNoteSamplesRequired(data) * data.velocitySamples * data.roundRobins;
         }
         #endregion
 
