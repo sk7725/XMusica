@@ -21,9 +21,9 @@ namespace XMusica.EditorUtilities {
         static readonly GUIContent k_startNote = new GUIContent("Sample Start Note", "The note where the samples start.");
         static readonly GUIContent k_endNote = new GUIContent("Sample Cutoff Note", "The note where the samples end. THis does not need to point exactly to a sample; instead any samples higher than this note will be ignored.");
         static readonly GUIContent k_sampleSpace = new GUIContent("Sample Spacing", "Space between note samples. Recommended to be a divisor of 12, a full octave.");
-        static readonly GUIContent k_estimatedNoteSamples = new GUIContent("Note Samples", "The estimated number of note samples needed.");
+        static readonly GUIContent k_estimatedNoteSamples = new GUIContent("Note Samples", "The estimated number of note samples needed per velocity.");
 
-        static readonly GUIContent k_velocitySamples = new GUIContent("Velocity Samples", "Number of velocity samples.");
+        static readonly GUIContent k_velocitySamples = new GUIContent("Velocity Samples", "Number of velocity samples per note.");
         static readonly GUIContent k_selectedVelocity = new GUIContent("Selected Velocity");
         static readonly GUIContent k_volumeMultiplier = new GUIContent("Volume Multiplier", "Volume multiplier for current velocity sample.");
         static readonly GUIContent k_normalizeVolume = new GUIContent("Normalize", "Normalize velocity sample. Select this option if your samples with smaller velocities are quiet. (As quiet as the stated velocity, that is)");
@@ -463,7 +463,7 @@ namespace XMusica.EditorUtilities {
                 if(prev != null) {
                     int n = Mathf.Min(prev.Length, generationData.volumeMultipliers.Length);
                     for(int i = 0; i < n; i++) {
-                        int v = generationData.GetVelocitySampleAt(i);
+                        int v = generationData.GetVelocitySampleAt(generationData.volumeMultipliers.Length - i - 1);
                         float max = v == 0 ? 1 : (127f / v);
                         generationData.volumeMultipliers[generationData.volumeMultipliers.Length - i - 1] = Mathf.Min(prev[prev.Length - i - 1], max);
                     }
