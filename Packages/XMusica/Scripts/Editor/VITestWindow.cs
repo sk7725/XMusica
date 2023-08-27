@@ -95,8 +95,9 @@ namespace XMusica.EditorUtilities {
             }
             GUILayout.Space(10);
 
+            bool valid = selected.HasGeneratedSamples();
             source = (AudioSource)EditorGUILayout.ObjectField(k_audioSource, source, typeof(AudioSource), true);
-            if (selected.HasGeneratedSamples()) {
+            if (valid) {
                 EditorGUILayout.HelpBox(lastPlayedSample, MessageType.Info, true);
             }
             else {
@@ -104,16 +105,16 @@ namespace XMusica.EditorUtilities {
             }
             GUILayout.Space(5);
 
-            int pressed = NotePreview(lastPressed, out float fvel);
+            int pressed = NotePreview(lastPressed, valid, out float fvel);
 
-            if(pressed != -1) {
+            if(pressed != -1 && valid) {
                 HandleNotePressed(pressed, Mathf.CeilToInt(fvel * 127));
             }
         }
         #endregion
 
         #region PianoGUI
-        private int NotePreview(int highlightNote, out float fvelocity) {
+        private int NotePreview(int highlightNote, bool enabled, out float fvelocity) {
             Event evt = Event.current;
             Rect scrollRect = EditorGUILayout.GetControlRect(true, keyHeight + border * 2 + 18);
             float totalWidth = keyWidth * 70 + border * 2;
@@ -144,7 +145,7 @@ namespace XMusica.EditorUtilities {
                 bool hovered = r1.Contains(evt.mousePosition) || r2.Contains(evt.mousePosition);
 
                 //determine key color
-                if (now < 21 || now > 127) {
+                if (now < 21 || now > 127 || !enabled) {
                     GUI.backgroundColor = whiteKeyDisabledColor;
                 }
                 else GUI.backgroundColor = highlightNote == now ? whiteKeySelectedColor : hovered ? whiteKeyHoverColor : whiteKeyColor;
@@ -174,7 +175,7 @@ namespace XMusica.EditorUtilities {
                 bool hovered = r1.Contains(evt.mousePosition);
 
                 //determine key color
-                if (now < 21 || now > 127) {
+                if (now < 21 || now > 127 || !enabled) {
                     GUI.backgroundColor = blackKeyDisabledColor;
                 }
                 else GUI.backgroundColor = highlightNote == now ? blackKeySelectedColor : hovered ? blackKeyHoverColor : blackKeyColor;

@@ -631,7 +631,7 @@ namespace XMusica.EditorUtilities {
             GUILayout.BeginHorizontal(GUILayout.MaxWidth(fieldMaxWidth));
             EditorGUILayout.PrefixLabel(content);
             var pos = EditorGUILayout.GetControlRect(true);
-            if(EditorGUI.DropdownButton(pos, new GUIContent(XM_Utilities.GetNoteString(defValue)), FocusType.Passive, pianoState == targetState ? XM_UIStyleManager.selectedDropdown : XM_UIStyleManager.dropdown)) {
+            if(EditorGUI.DropdownButton(pos, new GUIContent($"{XM_Utilities.GetNoteString(defValue)} ({defValue})"), FocusType.Passive, pianoState == targetState ? XM_UIStyleManager.selectedDropdown : XM_UIStyleManager.dropdown)) {
                 if (pianoState == targetState) pianoState = PianoState.None;
                 else pianoState = targetState;
             }

@@ -86,12 +86,17 @@ namespace XMusica.EditorUtilities {
             }
             GUILayout.Space(10);
 
-            GUILayout.Label(t_samples, EditorStyles.boldLabel, GUILayout.Height(30));
+            if (selected.HasGeneratedSamples()) {
+                GUILayout.Label(t_samples, EditorStyles.boldLabel, GUILayout.Height(30));
 
-            bool changed = DrawSampleMatrix();
+                bool changed = DrawSampleMatrix();
 
-            if (changed) {
-                SaveAsset();
+                if (changed) {
+                    SaveAsset();
+                }
+            }
+            else {
+                EditorGUILayout.HelpBox("Generate sample bindings first!", MessageType.Error, true);
             }
         }
         #endregion

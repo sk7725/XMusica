@@ -16,8 +16,8 @@ namespace XMusica.EditorUtilities {
 
                 var cont = EditorGUI.BeginProperty(position, label, property);
                 Rect contentRect = EditorGUI.PrefixLabel(position, cont);
-                noteNameContent.text = XM_Utilities.GetNoteString(property.intValue);
-                if (EditorGUI.DropdownButton(contentRect, noteNameContent, FocusType.Passive)) {
+                noteNameContent.text = $"<b>{XM_Utilities.GetNoteString(property.intValue)}</b> ({property.intValue})";
+                if (EditorGUI.DropdownButton(contentRect, noteNameContent, FocusType.Passive, XM_UIStyleManager.richTextDropDown)) {
                     MIDINoteWindow.ShowWindow(property);
                 }
 

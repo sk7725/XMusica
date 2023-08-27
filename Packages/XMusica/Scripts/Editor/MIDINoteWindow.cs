@@ -24,6 +24,7 @@ namespace XMusica.EditorUtilities {
         private SerializedObject target;
         private SerializedProperty property;
         private int viewOctave;
+        GUIContent noteNameContent = new();
 
         public static void ShowWindow(SerializedProperty property) {
             var window = GetWindow<MIDINoteWindow>(true);
@@ -48,12 +49,12 @@ namespace XMusica.EditorUtilities {
             target.Update();
 
             GUI.skin.box.alignment = TextAnchor.MiddleCenter;
+
+            int noteValue = property.intValue % 12;
+            noteNameContent.text = $"<b>{XM_Utilities.GetNoteString(property.intValue)}</b> ({property.intValue})";
+            EditorGUILayout.LabelField(noteLabel, noteNameContent, XM_UIStyleManager.richLabel);
             int prevNote = property.intValue;
             int octave = EditorGUILayout.IntSlider(octaveLabel, XM_Utilities.GetOctave(property.intValue), 0, 9);
-            int noteValue = property.intValue % 12;
-            EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField(noteLabel, XM_Utilities.GetNoteString(property.intValue));
-            EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space(offset);
 
