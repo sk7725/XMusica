@@ -150,13 +150,18 @@ namespace XMusica.EditorUtilities {
                 }
                 else GUI.backgroundColor = highlightNote == now ? whiteKeySelectedColor : hovered ? whiteKeyHoverColor : whiteKeyColor;
 
-                //render key
-                bool b1 = GUI.Button(r1, XM_Utilities.GetNoteString(now), XM_UIStyleManager.whitePianoKey);
-                bool b2 = GUI.Button(r2, "", XM_UIStyleManager.whitePianoKey);
-                if ((b1 || b2) && (now >= 21 && now <= 127)) {
+                if (hovered && (evt.type == EventType.MouseDown)) {
                     keyPressed = now;
                     fvelocity = (evt.mousePosition.y - total.y) / keyHeight;
                 }
+
+                //render key
+                GUI.Button(r1, XM_Utilities.GetNoteString(now), XM_UIStyleManager.whitePianoKey);
+                GUI.Button(r2, "", XM_UIStyleManager.whitePianoKey);
+                /*if ((b1 || b2) && (now >= 21 && now <= 127)) {
+                    keyPressed = now;
+                    fvelocity = (evt.mousePosition.y - total.y) / keyHeight;
+                }*/
                 x += keyWidth;
             }
 
@@ -180,12 +185,17 @@ namespace XMusica.EditorUtilities {
                 }
                 else GUI.backgroundColor = highlightNote == now ? blackKeySelectedColor : hovered ? blackKeyHoverColor : blackKeyColor;
 
-                //render key
-                bool b = GUI.Button(r1, "", XM_UIStyleManager.blackPianoKey);
-                if (b && (now >= 21 && now <= 127)) {
+                if (hovered && evt.type == EventType.MouseDown) {
                     keyPressed = now;
                     fvelocity = (evt.mousePosition.y - total.y) / blackKeyHeight;
                 }
+
+                //render key
+                GUI.Button(r1, "", XM_UIStyleManager.blackPianoKey);
+                /*if (b && (now >= 21 && now <= 127)) {
+                    keyPressed = now;
+                    fvelocity = (evt.mousePosition.y - total.y) / blackKeyHeight;
+                }*/
                 x += keyWidth;
             }
 
