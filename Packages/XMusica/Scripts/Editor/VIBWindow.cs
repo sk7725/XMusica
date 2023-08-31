@@ -297,7 +297,7 @@ namespace XMusica.EditorUtilities {
                 //test mouse hover
                 int j = i % 7;
                 bool hasLeftBit = j == 3 || j == 0 || i == 0; bool hasRightBit = j == 2 || j == 6 || i == 69;
-                Rect r1 = new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight - border);
+                Rect r1 = new Rect(x, total.y + blackKeyHeight, keyWidth + 1f, total.height - blackKeyHeight - border);
                 Rect r2 = new Rect(hasLeftBit ? x : x + blackKeyWidth * 0.5f, total.y, keyWidth - blackKeyWidth * ((hasLeftBit ? 0 : 0.5f) + (hasRightBit ? 0 : 0.5f)), blackKeyHeight);
                 bool hovered = !showSampleColor && (r1.Contains(evt.mousePosition) || r2.Contains(evt.mousePosition));
 
@@ -340,7 +340,7 @@ namespace XMusica.EditorUtilities {
                 int now = GetNoteOfBlackKey(i);
 
                 //test mouse hover
-                Rect r1 = new Rect(x, total.y, blackKeyWidth, blackKeyHeight);
+                Rect r1 = new Rect(x - 0.5f, total.y, blackKeyWidth + 0.5f, blackKeyHeight);
                 bool hovered = !showSampleColor && r1.Contains(evt.mousePosition);
 
                 //determine key color

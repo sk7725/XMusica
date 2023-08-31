@@ -114,8 +114,8 @@ namespace XMusica.EditorUtilities {
                 //mouse hover
                 int j = (i + 7 - EDGE_KEYS) % 7;
                 bool hasLeftBit = j == 3 || j == 0 || i == 0; bool hasRightBit = j == 2 || j == 6 || i == EDGE_KEYS * 2 + 6;
-                Rect r1 = new Rect(x, total.y + blackKeyHeight, keyWidth, total.height - blackKeyHeight - border);
-                Rect r2 = new Rect(hasLeftBit ? x : x + blackKeyWidth * 0.5f, total.y, keyWidth - blackKeyWidth * ((hasLeftBit ? 0 : 0.5f) + (hasRightBit ? 0 : 0.5f)), blackKeyHeight);
+                Rect r1 = new Rect(x, total.y + blackKeyHeight, keyWidth + 1f, total.height - blackKeyHeight - border);
+                Rect r2 = new Rect(hasLeftBit ? x : x + blackKeyWidth * 0.5f, total.y, keyWidth - blackKeyWidth * ((hasLeftBit ? 0 : 0.5f) + (hasRightBit ? 0 : 0.5f)) + 1f, blackKeyHeight);
                 bool hovered = r1.Contains(evt.mousePosition) || r2.Contains(evt.mousePosition);
 
                 //color
@@ -148,7 +148,7 @@ namespace XMusica.EditorUtilities {
                 int now = GetNoteOfBlackKey(i);
 
                 //mouse hover
-                Rect r1 = new Rect(x, total.y, blackKeyWidth, blackKeyHeight);
+                Rect r1 = new Rect(x - 0.5f, total.y, blackKeyWidth + 0.5f, blackKeyHeight);
                 bool hovered = r1.Contains(evt.mousePosition);
 
                 //color
@@ -168,6 +168,10 @@ namespace XMusica.EditorUtilities {
                 if(b && (now >= 21 && now <= 127)) keyPressed = now;
                 x += keyWidth;
             }
+
+            GUI.backgroundColor = blackKeyColor;
+            GUI.Box(new Rect(total.x + octavebuttonWidth, total.y, offset, total.height), "", XM_UIStyleManager.blackPianoKey);
+            GUI.Box(new Rect(total.x + total.width - octavebuttonWidth - offset, total.y, offset, total.height), "", XM_UIStyleManager.blackPianoKey);
 
             if (keyPressed != -1) newNote = keyPressed;
 

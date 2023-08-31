@@ -21,9 +21,9 @@ namespace XMusica.EditorUtilities {
             vinstBinderWindowIcon = AssetDatabase.LoadAssetAtPath(path + "/Editor Resources/Textures/vinst_binder_window.png", typeof(Texture2D)) as Texture2D;
             vinstSampleWindowIcon = AssetDatabase.LoadAssetAtPath(path + "/Editor Resources/Textures/vinst_sample_window.png", typeof(Texture2D)) as Texture2D;
             vinstTesterWindowIcon = AssetDatabase.LoadAssetAtPath(path + "/Editor Resources/Textures/vinst_tester_window.png", typeof(Texture2D)) as Texture2D;
-            whiteKeyTexture = AssetDatabase.LoadAssetAtPath(path + "/Editor Resources/Textures/key_white.png", typeof(Texture2D)) as Texture2D;
+            whiteKeyTexture = AssetDatabase.LoadAssetAtPath(path + "/Editor Resources/Textures/xmusica_key_white.png", typeof(Texture2D)) as Texture2D;
 
-            whitePianoKey = new GUIStyle("button");
+            whitePianoKey = new GUIStyle();
             whitePianoKey.normal.textColor = Color.black;
             whitePianoKey.normal.background = whiteKeyTexture;
             whitePianoKey.active.textColor = Color.black;
@@ -35,7 +35,7 @@ namespace XMusica.EditorUtilities {
             whitePianoKey.alignment = TextAnchor.LowerCenter;
             whitePianoKey.clipping = TextClipping.Overflow;
 
-            blackPianoKey = new GUIStyle("button");
+            blackPianoKey = new GUIStyle();
             blackPianoKey.normal.background = whiteKeyTexture;
             blackPianoKey.active.background = whiteKeyTexture;
             blackPianoKey.hover.background = whiteKeyTexture;
