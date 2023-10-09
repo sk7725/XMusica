@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: New ADSR Envelope
   m_EditorClassIdentifier: 
   attack: 0.02
-  decay: 0.17
-  sustain: 0.536
-  release: 0.43
+  decay: 0.2
+  sustain: 0.358
+  release: 0.48

@@ -17,7 +17,7 @@ namespace XMusica.EditorUtilities {
         static readonly GUIContent k_release = new GUIContent("Release", "The time it takes for the amplitude to fade out completely.");
         #endregion
 
-        private static float border = 3, previewHeight = 100, previewTapeHeight = 18;
+        private static float border = 3, previewHeight = 100, previewTapeHeight = 18, markerWidth = 9, markerHeight = 9, timeWidth = 8f, timeHeight = 8f;
 
         SerializedProperty s_attack, s_decay, s_sustain, s_release;
 
@@ -81,8 +81,22 @@ namespace XMusica.EditorUtilities {
             }
 
             //todo draw timeline
+            Handles.color = Color.white;
 
-            //todo draw adsr
+            DrawMarker(0, 1);
+            DrawMarker(0.5f, 1);
+
+            for(int i = 1; i < 5; i++) {
+                string s = string.Format("{0:0.00}", i * 0.1f / timeScale);
+                Handles.Label(GPos(i * 0.1f, 1f) + Vector2.up * 11f, s);
+                Handles.Label(GPos(i * 0.1f + 0.5f, 1f) + Vector2.up * 11f, s);
+            }
+            Handles.Label(GPos(0, 1) + new Vector2(-5f, 11f), "Press");
+            Handles.Label(GPos(0.5f, 1) + new Vector2(-5f, 11f), "Release");
+
+            //draw adsr
+            Handles.color = Color.gray;
+            Handles.DrawDottedLine(GPos(0.5f, 1), GPos(0.5f, 1 - env.sustain), 0.2f);
             Handles.color = Color.red;
             Handles.DrawLine(GPos(0, 1), GPos(env.attack * timeScale, 0));
             Handles.DrawLine(GPos(env.attack * timeScale, 0), GPos((env.attack + env.decay) * timeScale, 1 - env.sustain));
@@ -100,6 +114,11 @@ namespace XMusica.EditorUtilities {
 
         private Vector2 GPos(float x, float y) {
             return graphicRect.position + new Vector2(x * graphicRect.width, y * graphicRect.height);
+        }
+
+        private void DrawMarker(float x, float y) {
+            Vector2 pos = graphicRect.position + new Vector2(x * graphicRect.width, y * graphicRect.height);
+            Handles.DrawAAConvexPolygon(pos, pos + new Vector2(-markerWidth * 0.5f, markerHeight), pos + new Vector2(markerWidth * 0.5f, markerHeight));
         }
     }
 }
