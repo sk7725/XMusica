@@ -150,7 +150,7 @@ namespace XMusica.EditorUtilities {
                 }
                 else GUI.backgroundColor = highlightNote == now ? whiteKeySelectedColor : hovered ? whiteKeyHoverColor : whiteKeyColor;
 
-                if (hovered && (evt.type == EventType.MouseDown)) {
+                if (hovered && (evt.type == EventType.MouseDown) && !(now < 21 || now > 127 || !enabled)) {
                     keyPressed = now;
                     fvelocity = (evt.mousePosition.y - total.y) / keyHeight;
                 }
@@ -176,7 +176,7 @@ namespace XMusica.EditorUtilities {
                 int now = GetNoteOfBlackKey(i);
 
                 //test mouse hover
-                Rect r1 = new Rect(x - 0.5f, total.y, blackKeyWidth + 0.5f, blackKeyHeight);
+                Rect r1 = new Rect(x, total.y, blackKeyWidth, blackKeyHeight);
                 bool hovered = r1.Contains(evt.mousePosition);
 
                 //determine key color
@@ -185,13 +185,13 @@ namespace XMusica.EditorUtilities {
                 }
                 else GUI.backgroundColor = highlightNote == now ? blackKeySelectedColor : hovered ? blackKeyHoverColor : blackKeyColor;
 
-                if (hovered && evt.type == EventType.MouseDown) {
+                if (hovered && evt.type == EventType.MouseDown && !(now < 21 || now > 127 || !enabled)) {
                     keyPressed = now;
                     fvelocity = (evt.mousePosition.y - total.y) / blackKeyHeight;
                 }
 
                 //render key
-                GUI.Button(r1, "", XM_UIStyleManager.blackPianoKey);
+                GUI.Button(new Rect(r1.x - 0.5f, r1.y, r1.width + 1f, r1.height), "", XM_UIStyleManager.blackPianoKey);
                 /*if (b && (now >= 21 && now <= 127)) {
                     keyPressed = now;
                     fvelocity = (evt.mousePosition.y - total.y) / blackKeyHeight;

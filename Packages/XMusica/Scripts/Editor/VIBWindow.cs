@@ -340,7 +340,7 @@ namespace XMusica.EditorUtilities {
                 int now = GetNoteOfBlackKey(i);
 
                 //test mouse hover
-                Rect r1 = new Rect(x - 0.5f, total.y, blackKeyWidth + 0.5f, blackKeyHeight);
+                Rect r1 = new Rect(x - 0.5f, total.y, blackKeyWidth + 1f, blackKeyHeight);
                 bool hovered = !showSampleColor && r1.Contains(evt.mousePosition);
 
                 //determine key color

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace XMusica {
+    [CreateAssetMenu(fileName = "New Instrument", menuName = "XMusica/Virtual Instrument Binding", order = 220)]
     public sealed class VirtualInstrumentBinding : ScriptableObject, ISerializationCallbackReceiver {
         private const int MIN_NOTE = 21, MAX_NOTE = 127;
         /// <summary>
