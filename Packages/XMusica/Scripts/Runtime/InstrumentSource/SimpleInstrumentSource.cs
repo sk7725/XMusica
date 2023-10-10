@@ -14,16 +14,16 @@ namespace XMusica {
         }
 
         public override void Press(int note, int velocity) {
-            int currrent = PollSource();
-            if(sourceNote[currrent] != 0) {
-                sources[currrent].Stop();
+            int current = PollSource();
+            if(sourceNote[current] != 0) {
+                sources[current].Stop();
             }
-            sourceNote[currrent] = (short)note;
+            sourceNote[current] = (short)note;
             SampleData s = binding.GetSample(note, velocity, out float v, out float p);
-            sources[currrent].pitch = p;
-            sources[currrent].volume = v * volume;
-            sources[currrent].clip = s.clip;
-            sources[currrent].Play();
+            sources[current].pitch = p;
+            sources[current].volume = v * volume;
+            sources[current].clip = s.clip;
+            sources[current].Play();
         }
 
         public override void Release(int note, int velocity) {
