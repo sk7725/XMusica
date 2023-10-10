@@ -17,7 +17,8 @@ namespace XMusica.EditorUtilities {
         static readonly GUIContent k_release = new GUIContent("Release", "The time it takes for the amplitude to fade out completely.");
         #endregion
 
-        private static float border = 3, previewHeight = 100, previewTapeHeight = 18, markerWidth = 9, markerHeight = 9, timeWidth = 8f, timeHeight = 8f;
+        private static float border = 3, previewHeight = 100, previewTapeHeight = 24, markerWidth = 9, markerHeight = 9;
+        private static float minLabelWidth = 42, minTimeWidth = 23;
 
         SerializedProperty s_attack, s_decay, s_sustain, s_release;
 
@@ -56,6 +57,9 @@ namespace XMusica.EditorUtilities {
             Rect scrollRect = EditorGUILayout.GetControlRect(true, previewHeight + border * 2 + previewTapeHeight);
             Rect total = new Rect(scrollRect.x + border, scrollRect.y + border, scrollRect.width - border, scrollRect.height - border - previewTapeHeight);
 
+            bool newlineTimeTitle = total.width * 0.1f < minLabelWidth;
+            bool newlineTimeContent = total.width * 0.1f < minTimeWidth;
+
             Color defColor = GUI.backgroundColor;
             GUI.backgroundColor = Color.black;
             GUI.Box(total, "");
@@ -80,19 +84,26 @@ namespace XMusica.EditorUtilities {
                 }
             }
 
-            //todo draw timeline
+            //draw timeline
             Handles.color = Color.white;
+            for(int i = 0; i * timeScale <= 10; i++) {
+                float l = i % 10 == 0 ? 9f : i % 5 == 0 ? 7f : 4f;
+                float x = i * 0.1f * timeScale;
+                Handles.DrawLine(GPos(x, 1), GPos(x, 1) + Vector2.up * l);
+            }
 
             DrawMarker(0, 1);
             DrawMarker(0.5f, 1);
 
-            for(int i = 1; i < 5; i++) {
-                string s = string.Format("{0:0.00}", i * 0.1f / timeScale);
-                Handles.Label(GPos(i * 0.1f, 1f) + Vector2.up * 11f, s);
-                Handles.Label(GPos(i * 0.1f + 0.5f, 1f) + Vector2.up * 11f, s);
+            Handles.Label(GPos(0, 1) + new Vector2(-5f, 15f), "Press");
+            Handles.Label(GPos(0.5f, 1) + new Vector2(-5f, 15f), "Release");
+
+            Handles.color = Color.gray;
+            for (int i = 1; i < 5; i++) {
+                string s = string.Format("{0:0.0}", i * 0.1f / timeScale);
+                Handles.Label(GPos(i * 0.1f, 0f) + Vector2.up * (newlineTimeContent && i % 2 == 0 ? 15f : 2f), s);
+                Handles.Label(GPos(i * 0.1f + 0.5f, 0f) + Vector2.up * (newlineTimeContent && i % 2 == 0 ? 15f : 2f), s);
             }
-            Handles.Label(GPos(0, 1) + new Vector2(-5f, 11f), "Press");
-            Handles.Label(GPos(0.5f, 1) + new Vector2(-5f, 11f), "Release");
 
             //draw adsr
             Handles.color = Color.gray;
