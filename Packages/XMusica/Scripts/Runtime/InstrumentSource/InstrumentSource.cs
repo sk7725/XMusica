@@ -18,8 +18,12 @@ namespace XMusica {
             processingPressed = new bool[_sourceCount];
         }
 
-        protected override void Play(bool pressed, int note, int velocity) {
-            throw new System.NotImplementedException();
+        public override void Press(int note, int velocity) {
+            throw new System.NotImplementedException(); //todo
+        }
+
+        public override void Release(int note, int velocity) {
+            throw new System.NotImplementedException(); //todo
         }
     }
 }

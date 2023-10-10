@@ -24,6 +24,9 @@ namespace XMusica {
         protected byte nextVacantSource = 0;
         private bool initialized = false;
 
+        /// <summary>
+        /// Manually initialize the instrument and instantiate sources.
+        /// </summary>
         public void InstantiateSources() {
             if (initialized || _sourceCount < 1) return;
             sources = new AudioSource[_sourceCount];
@@ -51,14 +54,25 @@ namespace XMusica {
             if (_instantiateOn == SourceInstantiation.Start) InstantiateSources();
         }
 
-        protected AudioSource PollSource() {
-            AudioSource s = sources[nextVacantSource];
+        protected int PollSource() {
             nextVacantSource++;
             if (nextVacantSource == sources.Length) nextVacantSource = 0;
-            return s;
+            return nextVacantSource; //todo make polling smarter by prioritizing unused vacancies
         }
 
-        protected abstract void Play(bool pressed, int note, int velocity);
+        /// <summary>
+        /// Processes the press event of the given MIDI note.
+        /// </summary>
+        /// <param name="note">Note index (21-127)</param>
+        /// <param name="velocity">Velocity (0-127)</param>
+        public abstract void Press(int note, int velocity);
+
+        /// <summary>
+        /// Processes the release event of the given MIDI note.
+        /// </summary>
+        /// <param name="note">Note index (21-127)</param>
+        /// <param name="velocity">Velocity (0-127)</param>
+        public abstract void Release(int note, int velocity);
 
 #if UNITY_EDITOR
         protected virtual void Reset() {
