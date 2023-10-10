@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b23463eb4a703d942a83a68c5f2f8af9, type: 3}
-  m_Name: New Curve Envelope
+  m_Name: New Curve Envelope 1
   m_EditorClassIdentifier: 
   pressCurve:
     serializedVersion: 2
@@ -18,29 +18,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 1
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.17459404
-      value: 0.9937039
-      inSlope: 1.0026895
-      outSlope: 1.0026895
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.6503194
-      value: 0.5796344
-      inSlope: -0.008799944
-      outSlope: -0.008799944
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.22514996
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -52,29 +43,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.05648589
-      outSlope: 0.05648589
+      inSlope: 0
+      outSlope: -1
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.31929976
-    - serializedVersion: 3
-      time: 0.2609878
-      value: 0.07775682
-      inSlope: -0.1905685
-      outSlope: -0.1905685
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.27610713
-      outWeight: 0.11042416
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: -0.041108515
-      outSlope: -0.041108515
+      inSlope: -1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.108586736
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
