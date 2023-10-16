@@ -24,7 +24,7 @@ namespace XMusica.Envelope {
 
         public override float UpAmplitude(float timePassed) {
             if(timePassed < release) {
-                return (1 - timePassed / release) * sustain;
+                return 1 - timePassed / release;
             }
             return -1; // end
         }

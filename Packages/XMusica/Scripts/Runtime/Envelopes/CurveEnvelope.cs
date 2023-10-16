@@ -19,7 +19,7 @@ namespace XMusica.Envelope {
 
         public override float UpAmplitude(float timePassed) {
             if (timePassed < releaseCurveDuration) {
-                return releaseCurve.Evaluate(timePassed / releaseCurveDuration) * pressCurve[pressCurve.length - 1].value;
+                return releaseCurve.Evaluate(timePassed / releaseCurveDuration);
             }
             return -1;
         }

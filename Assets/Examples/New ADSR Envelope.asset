@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54da6978f025553459f262d4e29f99a2, type: 3}
   m_Name: New ADSR Envelope
   m_EditorClassIdentifier: 
-  attack: 0
-  decay: 1.304
-  sustain: 0.318
-  release: 1.43
+  attack: 0.312
+  decay: 0.686
+  sustain: 0.337
+  release: 3.4

@@ -43,6 +43,7 @@ namespace XMusica {
             for (int i = 0; i < _sourceCount; i++) {
                 if (sourceNote[i] == note) {
                     processingPressed[i] = false;
+                    initialVelocity[i] = envelope.DownAmplitude(time[i]) * initialVelocity[i];
                     time[i] = 0;
                 }
             }

@@ -122,7 +122,7 @@ namespace XMusica.EditorUtilities {
             }
 
             Handles.color = Color.white;
-            prev = GPos(0.5f, 1 - env.UpAmplitude(0));
+            prev = GPos(0.5f, 1 - env.UpAmplitude(0) * sus);
             for (int i = 1; i <= segments; i++) {
                 float t = (i / (float)segments * 0.5f) / timeScale;
                 if(t >= env.releaseCurveDuration) {
@@ -131,7 +131,7 @@ namespace XMusica.EditorUtilities {
                     Handles.DrawDottedLine(GPos(i / (float)segments * 0.5f + 0.5f, 1), GPos(1, 1), 0.2f);
                     break;
                 }
-                Vector2 next = GPos(i / (float)segments * 0.5f + 0.5f, 1 - env.UpAmplitude(t));
+                Vector2 next = GPos(i / (float)segments * 0.5f + 0.5f, 1 - env.UpAmplitude(t) * sus);
                 Handles.DrawLine(prev, next);
                 prev = next;
             }
