@@ -10,13 +10,15 @@ namespace XMusica {
         public VirtualEnvelope envelope;
         public bool scaledTime = true;
 
-        protected short[] sourceNote;
         protected bool[] processingPressed;
         protected float[] time; //note that this time is updated every frame because we don't want loss of accuracy as Time.time gets bigger and bigger.
         protected float[] initialVelocity;
 
+        public float[] CurrentSourceVelocity => initialVelocity;
+        public float[] CurrentSourceTime => time;
+        public bool[] CurrentSourcePressed => processingPressed;
+
         protected override void AfterInitialize() {
-            sourceNote = new short[_sourceCount];
             time = new float[_sourceCount];
             processingPressed = new bool[_sourceCount];
             initialVelocity = new float[_sourceCount];

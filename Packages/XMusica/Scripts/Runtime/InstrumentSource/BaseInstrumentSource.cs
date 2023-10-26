@@ -16,13 +16,17 @@ namespace XMusica {
         [SerializeField] protected int _sourceCount = 10;
         [SerializeField] protected SourceInstantiation _instantiateOn = SourceInstantiation.Awake;
 
+        protected AudioSource[] sources;
+        protected short[] sourceNote;
+
+        protected byte nextVacantSource = 0;
+        private bool initialized = false;
+
         public int SourceCount => _sourceCount;
         public SourceInstantiation InstantiateMode => _instantiateOn;
         public bool Instantiated => initialized;
-
-        protected AudioSource[] sources;
-        protected byte nextVacantSource = 0;
-        private bool initialized = false;
+        public AudioSource[] Sources => sources;
+        public short[] CurrentSourceNote => sourceNote;
 
         /// <summary>
         /// Manually initialize the instrument and instantiate sources.
@@ -40,6 +44,8 @@ namespace XMusica {
                 sources[i].gameObject.name = $"Source {i}";
             }
 
+            sourceNote = new short[_sourceCount];
+
             AfterInitialize();
             initialized = true;
         }
@@ -56,8 +62,13 @@ namespace XMusica {
 
         protected int PollSource() {
             nextVacantSource++;
-            if (nextVacantSource == sources.Length) nextVacantSource = 0;
-            return nextVacantSource; //todo make polling smarter by prioritizing unused vacancies
+            if (nextVacantSource == _sourceCount) nextVacantSource = 0;
+
+            for(int i = 0; i < _sourceCount; i++) {
+                if (sourceNote[(nextVacantSource + i) % _sourceCount] == 0) return (nextVacantSource + i) % _sourceCount;
+            }
+
+            return nextVacantSource;
         }
 
         /// <summary>

@@ -7,11 +7,8 @@ namespace XMusica {
     [AddComponentMenu("Audio/XMusica - Simple Instrument Source")]
     public class SimpleInstrumentSource : BaseInstrumentSource {
         public bool stopPlayingOnRelease = false;
-        protected short[] sourceNote;
 
-        protected override void AfterInitialize() {
-            sourceNote = new short[_sourceCount];
-        }
+        protected override void AfterInitialize() {}
 
         public override void Press(int note, int velocity) {
             int current = PollSource();
