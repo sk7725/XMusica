@@ -18,6 +18,17 @@ namespace XMusica {
         public float[] CurrentSourceTime => time;
         public bool[] CurrentSourcePressed => processingPressed;
 
+        protected override int PollSource() {
+            nextVacantSource++;
+            if (nextVacantSource == _sourceCount) nextVacantSource = 0;
+
+            for (int i = 0; i < _sourceCount; i++) {
+                if (sourceNote[(nextVacantSource + i) % _sourceCount] == 0) return (nextVacantSource + i) % _sourceCount;
+            }
+
+            return nextVacantSource;
+        }
+
         protected override void AfterInitialize() {
             time = new float[_sourceCount];
             processingPressed = new bool[_sourceCount];

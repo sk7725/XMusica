@@ -60,16 +60,7 @@ namespace XMusica {
             if (_instantiateOn == SourceInstantiation.Start) InstantiateSources();
         }
 
-        protected int PollSource() {
-            nextVacantSource++;
-            if (nextVacantSource == _sourceCount) nextVacantSource = 0;
-
-            for(int i = 0; i < _sourceCount; i++) {
-                if (sourceNote[(nextVacantSource + i) % _sourceCount] == 0) return (nextVacantSource + i) % _sourceCount;
-            }
-
-            return nextVacantSource;
-        }
+        abstract protected int PollSource();
 
         /// <summary>
         /// Processes the press event of the given MIDI note.

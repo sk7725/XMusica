@@ -8,6 +8,13 @@ namespace XMusica {
     public class SimpleInstrumentSource : BaseInstrumentSource {
         public bool stopPlayingOnRelease = false;
 
+        protected override int PollSource() {
+            nextVacantSource++;
+            if (nextVacantSource == _sourceCount) nextVacantSource = 0;
+
+            return nextVacantSource;
+        }
+
         protected override void AfterInitialize() {}
 
         public override void Press(int note, int velocity) {
